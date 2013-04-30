@@ -20,13 +20,13 @@ import numpy as np
 import streamplot
 import time
 
-# create a stream plot
-spo2_plot = streamplot.StreamPlot(saveFileNameStart = "trial_spo2",lineColors = ['r','b'])
+# create a stream plot containing two channels. First one shown by a solid red line and the second one by blue dots
+spo2_plot = streamplot.StreamPlot(saveFileNameStart = "trial_spo2",lines = [('l','r'),('o','b')])
 
 # first, a ramp-up
 for i in range(100):
 	time.sleep(0.05)
-	spo2_plot.addDataPoint(i, [i,i+2])
+	spo2_plot.addDataPoint(i, [i,i+2]) # addDataPoint( time , [y_val_channel_0 , y_val_channel_1] )
 
 # then, the signal stays constant
 for i in range(101,200):

@@ -23,10 +23,10 @@ import glob
 import re
 
 class StreamPlot():
-	def __init__(self,saveFileNameStart = "test",lineColors = ['g'],nSamples=100):
+	def __init__(self,saveFileNameStart = "test",lines = [('l','g')],nSamples=100):
 		self.saveFileNameStart = saveFileNameStart 
 		self.nSamples = nSamples
-		self.n = len(lineColors)
+		self.n = len(lines)
 		self.auto_focus = True
 		self.vals_to_add = []
 		self.npts = 0
@@ -43,7 +43,7 @@ class StreamPlot():
 		grid()
 		
 		for i in range(self.n):
-			plot(np.array([]),np.array([]),color=lineColors[i],name='im'+str(i))
+			plot(np.array([]),np.array([]),lines[i][0],color=lines[i][1],name='im'+str(i))
 		
 		animate(self.anim, dt=.025)
 		
