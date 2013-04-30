@@ -6,7 +6,7 @@ A data visualization tool for streaming data.
 Features
 ---------
 
-- Auto-focus. As streaming data gets displayed, the plot zooms appropriately and fits the data to the screen.
+- Auto-focus. As streaming data gets displayed, the plot pans and zooms appropriately and fits the data to the screen.
 - Key press triggers the program to save the last n samples acquired
 
 Dependencies
