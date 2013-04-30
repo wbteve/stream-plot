@@ -30,9 +30,8 @@ When the plot figure is in focus, the following shortcuts may be used.
 - 'a' - Toggle auto-focus
 - 'd' - Save the last n samples into a csv file
 - 'f' - Save all buffered samples into a csv
-- 'm' - Change marker style ( yet to be implemented )
 - 'z' - Zoom-in along the time axis
 - 'x' - Zomm-out along the time axis
-- 'c' - Save samples visible on screen to a csv (yet to be implemented)
+- 'c' - Save samples visible on screen to a csv
 
 The entire list of available shortcuts may be seen by pressing 'h' when the window is in focus.
