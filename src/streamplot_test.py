@@ -23,15 +23,19 @@ import time
 # create a stream plot containing two channels. First one shown by a solid red line and the second one by blue dots
 spo2_plot = streamplot.StreamPlot(saveFileNameStart = "trial_spo2",lines = [('l','r'),('o','b')])
 
-# first, a ramp-up
-for i in range(100):
-	time.sleep(0.05)
-	spo2_plot.addDataPoint(i, [i,i+2]) # addDataPoint( time , [y_val_channel_0 , y_val_channel_1] )
+t = 0
+while True:
+	# first, a ramp-up
+	for i in range(100):
+		time.sleep(0.05)
+		spo2_plot.addDataPoint(t, [i,i+2]) # addDataPoint( time , [y_val_channel_0 , y_val_channel_1] )
+		t += 1
 
-# then, the signal stays constant
-for i in range(101,200):
-	time.sleep(0.05)
-	spo2_plot.addDataPoint(i, [99,96])	
+	# then, the signal stays constant
+	for i in range(100):
+		time.sleep(0.05)
+		spo2_plot.addDataPoint(t, [99,96])
+		t += 1
 
 # all done, wait for the user to hit the exit button on the displayed plot
 spo2_plot.close()

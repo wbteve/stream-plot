@@ -23,14 +23,14 @@ import glob
 import re
 
 class StreamPlot():
-	def __init__(self,saveFileNameStart = "test",lines = [('l','g')],nSamples=100):
+	def __init__(self,saveFileNameStart = "test",lines = [('l','g')],nSamples=100,auto_t=10.0):
 		self.saveFileNameStart = saveFileNameStart 
 		self.nSamples = nSamples
 		self.n = len(lines)
 		self.auto_focus = True
 		self.vals_to_add = []
 		self.npts = 0
-		self.auto_t = 10.0
+		self.auto_t = auto_t
 		self.last_t = 0.0
 		self.vals = [ np.array([]) for i in range(self.n) ]
 		self.vals_to_add_lock = threading.Lock()
@@ -55,6 +55,12 @@ class StreamPlot():
 		
 		action('KeyPress', 'saveAllSamples', key='F')
 		event('saveAllSamples', self.saveAllSamples)
+		
+		action('KeyPress', 'zoomInTime', key='Z')
+		event('zoomInTime', self.zoomInTime)
+		
+		action('KeyPress', 'zoomOutTime', key='X')
+		event('zoomOutTime', self.zoomOutTime)
 		
 		self.disp_thread = threading.Thread(target=show) # display the plot in a new thread so as to make object creation non-blocking
 		self.disp_thread.start()
@@ -133,6 +139,12 @@ class StreamPlot():
 	
 	def saveAllSamples(self,fig,params):
 		self.saveNsamples(self.npts)
+	
+	def zoomOutTime(self,fig,params):
+		self.auto_t *= 2.0
+	
+	def zoomInTime(self,fig,params):
+		self.auto_t /= 2.0
 	
 	def saveNsamples(self,N):
 		fileName = self.getNextCsvName()
