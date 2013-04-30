@@ -27,6 +27,7 @@ class StreamPlot():
 		self.vals_to_add = []
 		self.npts = 0
 		self.auto_t = 10.0
+		self.last_t = 0.0
 		
 		self.vals = [] # each element of this list corresponds to a line plot
 		for i in range(self.n):
@@ -48,18 +49,17 @@ class StreamPlot():
 		action('KeyPress', 'ToggleAutoFocus', key='A')
 		event('ToggleAutoFocus', self.toggleAutoFocus)
 		
-		self.disp_thread = threading.Thread(target=show)
+		self.disp_thread = threading.Thread(target=show) # display the plot in a new thread so as to make object creation non-blocking
 		self.disp_thread.start()
-		#show()
 	
 	def anim(self,fig,params):
 	
+		# remove values in the buffer and put them into an NumPy array suitable for consumption by Galry
 		self.vals_to_add_lock.acquire()
 		for i in self.vals_to_add:
 			self.npts += 1
 			t = i[0]
 			self.last_t = t
-			#assert(len(i[1]) == self.n,"Too few yvals passed")
 			for j in range(len(i[1])):
 				if self.vals[j].size > 0:
 					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]])))
@@ -70,8 +70,8 @@ class StreamPlot():
 		
 		for i in range(self.n):
 			fig.set_data(visual='im'+str(i),position=self.vals[i])
-		
-		#fig.set_data(visual='im1',position=np.array([ [1,97],[2,99] ]))
+
+		# find out the peak and trough values in the last 'self.auto_t' units of time, pass it through a window comparator and set the view box
 		
 		if self.auto_focus:
 			xstart = self.last_t - self.auto_t
@@ -93,9 +93,9 @@ class StreamPlot():
 				if minval < ylo:
 					ylo = minval
 			
-			if ylo == -float('Inf'):
+			if ylo == float('Inf'):
 				ylo = -1.0
-			if yhi == float('Inf'):
+			if yhi == -float('Inf'):
 				yhi = 1.0
 			
 			if self.ylo < 0.5*ylo or self.ylo > 0.9*ylo:
@@ -103,8 +103,9 @@ class StreamPlot():
 			if self.yhi > 1.5*yhi or self.yhi < 1.1*yhi:
 				self.yhi = 1.3*yhi
 			
-			fig.process_interaction('SetViewbox', [xstart,self.ylo,xstop,self.yhi ])
-		
+			viewBox = [xstart,self.ylo,xstop,self.yhi ]
+			fig.process_interaction('SetViewbox', viewBox)
+
 	def addDataPoint(self,t,val_list): 
 		self.vals_to_add_lock.acquire()
 		self.vals_to_add.append( (t,val_list) )
