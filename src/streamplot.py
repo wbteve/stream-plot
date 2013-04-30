@@ -19,9 +19,13 @@
 import numpy as np
 from galry import *
 import threading
+import glob
+import re
 
 class StreamPlot():
-	def __init__(self,saveFileNameStart = "test",lineColors = ['b']):
+	def __init__(self,saveFileNameStart = "test",lineColors = ['b'],nSamples=100):
+		self.saveFileNameStart = saveFileNameStart 
+		self.nSamples = nSamples
 		self.n = len(lineColors)
 		self.auto_focus = True
 		self.vals_to_add = []
@@ -48,6 +52,12 @@ class StreamPlot():
 		
 		action('KeyPress', 'ToggleAutoFocus', key='A')
 		event('ToggleAutoFocus', self.toggleAutoFocus)
+		
+		action('KeyPress', 'saveLastNSamples', key='D')
+		event('saveLastNSamples', self.saveLastNSamples)
+		
+		action('KeyPress', 'saveAllSamples', key='F')
+		event('saveAllSamples', self.saveAllSamples)
 		
 		self.disp_thread = threading.Thread(target=show) # display the plot in a new thread so as to make object creation non-blocking
 		self.disp_thread.start()
@@ -113,7 +123,42 @@ class StreamPlot():
 		
 	def toggleAutoFocus(self,fig,params):
 		self.auto_focus = not self.auto_focus
-		
+	
+	def saveLastNSamples(self,fig,params):
+		self.saveNsamples(self.nSamples)
+	
+	def saveAllSamples(self,fig,params):
+		self.saveNsamples(self.npts)
+	
+	def saveNsamples(self,N):
+		fileName = self.getNextCsvName()
+		with open(fileName,'w') as f:
+			n = 0
+			start = self.npts - N
+			if start < 0:
+				start = 0
+			for i in range(start,self.npts):
+				n += 1
+				if(n >= N):
+					break
+				f.write(str(self.vals[0][i][0]))
+				for c in range(self.n):
+					f.write(',')
+					f.write(str(self.vals[c][i][1]))
+				f.write('\n')
+			print "Saved to "+str(fileName)
+				
+	def getNextCsvName(self):
+		fileNo = 0
+		existingFileList = glob.glob(self.saveFileNameStart+'*.csv')
+		for i in existingFileList:
+			s = re.match(r'.*_(\d*)\.csv',i)
+			if s:
+				num = int(s.group(1))
+				if num >= fileNo:
+					fileNo = num + 1
+		return self.saveFileNameStart+"_"+str(fileNo)+'.csv'
+	
 	def close(self):
 		self.disp_thread.join()
 

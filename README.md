@@ -7,7 +7,7 @@ Features
 ---------
 
 - Auto-focus. As streaming data gets displayed, the plot zooms appropriately and fits the data to the screen.
-- Key press triggers the program to save the last n samples acquired (yet to be implemented)
+- Key press triggers the program to save the last n samples acquired
 
 Dependencies
 -----------
@@ -26,8 +26,9 @@ Shortcuts
 ---------
 
 When the plot figure is in focus, the following shortcuts may be used.
+The entire list of available shortcuts may be seen by pressing 'h' when the window is in focus.
 
 - 'a' - Toggle auto-focus
-- 's' - Save the last n samples into a csv file ( yet to be implemented )
-- 'd' - Save all buffered samples ( yet to be implemented )
+- 'd' - Save the last n samples into a csv file
+- 'f' - Save all buffered samples
 - 'm' - Change marker style ( yet to be implemented )
