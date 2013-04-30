@@ -23,6 +23,8 @@ import time
 # create a stream plot containing two channels. First one shown by a solid red line and the second one by blue dots
 spo2_plot = streamplot.StreamPlot(saveFileNameStart = "trial_spo2",lines = [('l','r'),('o','b')])
 
+print "Hit CTRL+C to exit"
+
 t = 0
 while True:
 	# first, a ramp-up

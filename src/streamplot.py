@@ -62,6 +62,9 @@ class StreamPlot():
 		action('KeyPress', 'zoomOutTime', key='X')
 		event('zoomOutTime', self.zoomOutTime)
 		
+		action('KeyPress', 'saveVisibleSamples', key='C')
+		event('saveVisibleSamples', self.saveVisibleSamples)
+		
 		self.disp_thread = threading.Thread(target=show) # display the plot in a new thread so as to make object creation non-blocking
 		self.disp_thread.start()
 	
@@ -145,6 +148,20 @@ class StreamPlot():
 	
 	def zoomInTime(self,fig,params):
 		self.auto_t /= 2.0
+	
+	def saveVisibleSamples(self,fig,params):
+		fileName = self.getNextCsvName()
+		(xstart,ystart,xstop,ystop) = fig.get_processor('navigation').get_viewbox()
+		with open(fileName,'w') as f:
+			for i in range(self.npts):
+				t = self.vals[0][i][0]
+				if t >= xstart and t <= xstop:
+					f.write(str(t))
+					for j in range(self.n):
+						f.write(',')
+						f.write(str(self.vals[j][i][1]))
+					f.write('\n')
+		print "Saved samples from t = "+str(xstart)+" to t = "+str(xstop)+" in "+fileName
 	
 	def saveNsamples(self,N):
 		fileName = self.getNextCsvName()
