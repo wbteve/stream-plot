@@ -20,4 +20,14 @@ How to use
 ----------
 
 - Install all dependencies (Note that Galry has a few more dependencies).
-- See src/streamplot_test.py for an example
+- See src/streamplot_test.py for an example.
+
+Shortcuts
+---------
+
+When the plot figure is in focus, the following shortcuts may be used.
+
+- 'a' - Toggle auto-focus
+- 's' - Save the last n samples into a csv file ( yet to be implemented )
+- 'd' - Save all buffered samples ( yet to be implemented )
+- 'm' - Change marker style ( yet to be implemented )
