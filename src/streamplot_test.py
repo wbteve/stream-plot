@@ -23,7 +23,6 @@ import time
 # create a stream plot
 spo2_plot = streamplot.StreamPlot(saveFileNameStart = "trial_spo2",lineColors = ['r','b'])
 
-
 # first, a ramp-up
 for i in range(100):
 	time.sleep(0.05)

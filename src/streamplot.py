@@ -67,12 +67,16 @@ class StreamPlot():
 			self.npts += 1
 			t = i[0]
 			self.last_t = t
+			firstTime = False
 			for j in range(len(i[1])):
 				if self.vals[j].size > 0:
 					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]])))
 				else:
 					self.vals[j] = np.array([t,i[1][j]])
 					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]]))) # otherwise, the array type goes bad
+					firstTime = True
+			if firstTime:
+				self.npts += 1
 		self.vals_to_add = []
 		self.vals_to_add_lock.release()
 		
@@ -88,6 +92,7 @@ class StreamPlot():
 			ylo = float('Inf')
 			yhi = -float('Inf')
 			
+			
 			for i in reversed(range(self.npts)):
 				if(self.vals[0][i][0] < xstart):
 					break
@@ -101,15 +106,15 @@ class StreamPlot():
 					yhi = maxval
 				if minval < ylo:
 					ylo = minval
-			
+
 			if ylo == float('Inf'):
 				ylo = -1.0
 			if yhi == -float('Inf'):
 				yhi = 1.0
 			
-			if self.ylo < 0.5*ylo or self.ylo > 0.9*ylo:
+			if self.ylo <= 0.5*ylo or self.ylo >= 0.9*ylo:
 				self.ylo = 0.7*ylo
-			if self.yhi > 1.5*yhi or self.yhi < 1.1*yhi:
+			if self.yhi >= 1.5*yhi or self.yhi <= 1.1*yhi:
 				self.yhi = 1.3*yhi
 			
 			viewBox = [xstart,self.ylo,xstop,self.yhi ]
