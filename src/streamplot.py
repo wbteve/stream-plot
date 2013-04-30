@@ -32,10 +32,7 @@ class StreamPlot():
 		self.npts = 0
 		self.auto_t = 10.0
 		self.last_t = 0.0
-		
-		self.vals = [] # each element of this list corresponds to a line plot
-		for i in range(self.n):
-			self.vals.append(np.array([ [] ])) # each point of this array is a 2-element list [t,yval]
+		self.vals = [ np.array([]) for i in range(self.n) ]
 		self.vals_to_add_lock = threading.Lock()
 		
 		self.ylo = -1.0
@@ -75,9 +72,11 @@ class StreamPlot():
 					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]])))
 				else:
 					self.vals[j] = np.array([t,i[1][j]])
+					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]]))) # otherwise, the array type goes bad
 		self.vals_to_add = []
 		self.vals_to_add_lock.release()
 		
+		#print self.vals
 		for i in range(self.n):
 			fig.set_data(visual='im'+str(i),position=self.vals[i])
 
@@ -115,7 +114,7 @@ class StreamPlot():
 			
 			viewBox = [xstart,self.ylo,xstop,self.yhi ]
 			fig.process_interaction('SetViewbox', viewBox)
-
+		
 	def addDataPoint(self,t,val_list): 
 		self.vals_to_add_lock.acquire()
 		self.vals_to_add.append( (t,val_list) )
