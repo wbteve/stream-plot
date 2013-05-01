@@ -192,7 +192,7 @@ class StreamPlot():
 					fileNo = num + 1
 		return self.saveFileNameStart+"_"+str(fileNo)+'.csv'
 	
-	def close(self):
+	def waitUntilExit(self):
 		self.disp_thread.join()
 	
 	def isPlotAlive(self):
