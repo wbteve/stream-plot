@@ -1,5 +1,5 @@
-''' stream-plot is a data visualization tool for streaming data.
-    Copyright (C) 2013  Sagar G V
+''' stream-plot is a data visualization tool for streaming data. It is based on Galry by Cyrille Rossant.
+    Copyright (C) 2013  Sagar G V 
     E-mail : sagar.writeme@gmail.com
 
     This program is free software: you can redistribute it and/or modify

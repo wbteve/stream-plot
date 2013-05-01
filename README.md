@@ -1,7 +1,8 @@
 stream-plot
 ===========
 
-A data visualization tool for streaming data.
+A data visualization tool for streaming data. It is based on Galry, an open-source tool by Cyrille Rossant.
+
 
 Features
 ---------
@@ -12,15 +13,22 @@ Features
 Dependencies
 -----------
 
-- Python 2.7
+- Python 2.7 - http://www.python.org/
+- Open GL >= 2.1 - Your graphics drivers should support OpenGL 2.1
+- PyOpenGL >= 3.0.2 - http://pyopengl.sourceforge.net/
+- PyQt4 with openGL bindings - http://www.riverbankcomputing.com/software/pyqt/download
 - NumPy - http://www.numpy.org/
-- Galry (tested with 0.1.0.rc1) - http://rossant.github.io/galry/
+- matplotlib - http://matplotlib.org/
+
+
+This project uses Galry 0.1.0.rc1 ( http://rossant.github.io/galry/ ) which is bundled in the form of source code.
+
 
 How to use
 ----------
 
-- Install all dependencies (Note that Galry has a few more dependencies).
-- See src/streamplot_test.py for an example.
+- Install all dependencies.
+- See src/streamplot_test*.py for examples. Run "python streamplot_test2.py" in the command line.
 
 Shortcuts
 ---------
