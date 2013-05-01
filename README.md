@@ -28,7 +28,9 @@ How to use
 ----------
 
 - Install all dependencies.
-- See src/streamplot_test*.py for examples. Run "python streamplot_test2.py" in the command line.
+- Clone this project
+- See src/streamplot_test*.py for examples. Run "python src/streamplot_test2.py" in the command line.
+- To use stream-plot in your own project, include the file 'src/streamplot.py' and folders 'src/galry' and 'src/qtools' in the root of your script.
 
 Shortcuts
 ---------
