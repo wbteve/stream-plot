@@ -194,5 +194,8 @@ class StreamPlot():
 	
 	def close(self):
 		self.disp_thread.join()
+	
+	def isPlotAlive(self):
+		return self.disp_thread.isAlive()
 
 
