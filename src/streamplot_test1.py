@@ -16,9 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import numpy as np
 import streamplot
-import time
 
 # create a stream plot containing two channels. First one shown by a solid red line and the second one by a solid blue line
 myPlot = streamplot.StreamPlot(saveFileNameStart = "my_plot",lines = [('l','r'),('l','b')])
