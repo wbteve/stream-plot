@@ -23,7 +23,7 @@ import glob
 import re
 
 class StreamPlot():
-	def __init__(self,saveFileNameStart = "test",lines = [('l','g')],nSamples=100,auto_t=10.0):
+	def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False):
 		self.saveFileNameStart = saveFileNameStart 
 		self.nSamples = nSamples
 		self.n = len(lines)
@@ -34,6 +34,7 @@ class StreamPlot():
 		self.last_t = 0.0
 		self.vals = [ np.array([]) for i in range(self.n) ]
 		self.vals_to_add_lock = threading.Lock()
+		self.lines = lines
 		
 		self.ylo = -1.0
 		self.yhi = 1.0
@@ -44,6 +45,7 @@ class StreamPlot():
 		
 		for i in range(self.n):
 			plot(np.array([]),np.array([]),lines[i][0],color=lines[i][1],name='im'+str(i))
+			text(lines[i][2],color=self.letterToRGBA(lines[i][1]),name='legend'+str(i), fontsize=16, is_static=True,coordinates=(0.5, 0.95 - i*0.1))
 		
 		animate(self.anim, dt=.025)
 		
@@ -67,6 +69,18 @@ class StreamPlot():
 		
 		self.disp_thread = threading.Thread(target=show) # display the plot in a new thread so as to make object creation non-blocking
 		self.disp_thread.start()
+	
+	def letterToRGBA(self,s):
+		if s == 'r':
+			return (1.0,0.0,0.0,1.0)
+		elif s == 'g':
+			return (0.0,1.0,0.0,1.0)
+		elif s == 'b':
+			return (0.0,0.0,1.0,1.0)
+		elif s == 'y':
+			return (1.0,1.0,0.0,1.0)
+		else:
+			return (1.0,1.0,1.0,1.0)
 	
 	def anim(self,fig,params):
 	
@@ -92,6 +106,7 @@ class StreamPlot():
 		#print self.vals
 		for i in range(self.n):
 			fig.set_data(visual='im'+str(i),position=self.vals[i])
+			fig.set_data(text=self.lines[i][2]+' : '+str(self.vals[i][-1][1]), visual='legend'+str(i))
 
 		# find out the peak and trough values in the last 'self.auto_t' units of time, pass it through a window comparator and set the view box
 		

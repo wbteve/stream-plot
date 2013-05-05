@@ -19,7 +19,7 @@
 import streamplot
 
 # create a stream plot containing two channels. First one shown by a solid red line and the second one by a solid blue line
-myPlot = streamplot.StreamPlot(saveFileNameStart = "my_plot",lines = [('l','r'),('l','b')])
+myPlot = streamplot.StreamPlot(saveFileNameStart = "my_plot",lines = [('l','r','redPlot'),('l','b','bluePlot')])
 
 # add two data points
 myPlot.addDataPoint( 0 , [99,98] ) # at time t=0, channel 0 has y-value 99 and channel 1 has y-value 98

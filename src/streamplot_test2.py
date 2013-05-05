@@ -20,7 +20,7 @@ import streamplot
 import time
 
 # create a stream plot containing two channels. First one shown by a solid red line and the second one by blue dots
-myPlot = streamplot.StreamPlot(saveFileNameStart = "my_plot",lines = [('l','r'),('o','b')])
+myPlot = streamplot.StreamPlot(saveFileNameStart = "my_plot",lines = [('l','r','redPlot'),('o','b','bluePlot')],legend=True)
 
 def run():
 	t = 0
