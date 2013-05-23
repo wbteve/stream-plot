@@ -105,8 +105,9 @@ class StreamPlot():
 		
 		#print self.vals
 		for i in range(self.n):
-			fig.set_data(visual='im'+str(i),position=self.vals[i])
-			fig.set_data(text=self.lines[i][2]+' : '+str(self.vals[i][-1][1]), visual='legend'+str(i))
+			if self.npts > 0:
+				fig.set_data(visual='im'+str(i),position=self.vals[i])
+				fig.set_data(text=self.lines[i][2]+' : '+str(self.vals[i][-1][1]), visual='legend'+str(i))
 
 		# find out the peak and trough values in the last 'self.auto_t' units of time, pass it through a window comparator and set the view box
 		
