@@ -141,6 +141,10 @@ class StreamPlot():
 				self.ylo = 0.7*ylo
 			if self.yhi >= 1.5*yhi or self.yhi <= 1.1*yhi:
 				self.yhi = 1.3*yhi
+			eps = 1e-20
+			if np.abs(self.yhi-self.ylo) < eps:
+				self.yhi = (self.ylo+self.yhi)/2.0 + eps/2
+				self.ylo = (self.ylo+self.yhi)/2.0 - eps/2
 			
 			viewBox = [xstart,self.ylo,xstop,self.yhi ]
 			fig.process_interaction('SetViewbox', viewBox)
