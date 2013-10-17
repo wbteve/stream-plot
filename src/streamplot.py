@@ -22,6 +22,8 @@ import threading
 import glob
 import re
 
+MAX_POINTS_IN_BUF = 100000
+
 class StreamPlot():
 	def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False):
 		self.saveFileNameStart = saveFileNameStart 
@@ -91,13 +93,19 @@ class StreamPlot():
 			t = i[0]
 			self.last_t = t
 			firstTime = False
-			for j in range(len(i[1])):
+			bufExceeded = False
+			for j in range(self.n):
+				if self.vals[j].size > MAX_POINTS_IN_BUF:
+					self.vals[j] = self.vals[j][1:]#np.vstack((self.vals[j][1:],np.array([t,i[1][j]])))
+					bufExceeded = True
 				if self.vals[j].size > 0:
 					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]])))
 				else:
 					self.vals[j] = np.array([t,i[1][j]])
 					self.vals[j] = np.vstack((self.vals[j],np.array([t,i[1][j]]))) # otherwise, the array type goes bad
 					firstTime = True
+			if bufExceeded:
+				self.npts -= 1
 			if firstTime:
 				self.npts += 1
 		self.vals_to_add = []
