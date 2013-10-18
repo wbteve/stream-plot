@@ -22,7 +22,7 @@ import threading
 import glob
 import re
 
-MAX_POINTS_IN_BUF = 10000
+MAX_POINTS_IN_BUF = 100
 
 class StreamPlot():
 	def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False):
@@ -108,7 +108,7 @@ class StreamPlot():
 			if firstTime:
 				self.npts += 1
 		self.vals_to_add = []
-		self.vals_to_add_lock.release()
+		
 		
 		#print self.vals
 		for i in range(self.n):
@@ -155,7 +155,8 @@ class StreamPlot():
 			
 			viewBox = [xstart,self.ylo,xstop,self.yhi ]
 			fig.process_interaction('SetViewbox', viewBox)
-		
+		self.vals_to_add_lock.release()
+
 	def addDataPoint(self,t,val_list): 
 		self.vals_to_add_lock.acquire()
 		self.vals_to_add.append( (t,val_list) )
