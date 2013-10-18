@@ -26,6 +26,9 @@ def run():
 	t = 0
 	while True:
 		#a ramp-up
+		if t==400:
+			t = 0
+			myPlot.resetPlot()
 		for i in range(100):
 			if not myPlot.isPlotAlive():
 				return
