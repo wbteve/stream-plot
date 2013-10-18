@@ -22,7 +22,7 @@ import threading
 import glob
 import re
 
-MAX_POINTS_IN_BUF = 100
+MAX_POINTS_IN_BUF = 10000
 
 class StreamPlot():
 	def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False):
