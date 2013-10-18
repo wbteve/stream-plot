@@ -22,7 +22,7 @@ import threading
 import glob
 import re
 
-MAX_POINTS_IN_BUF = 100000
+MAX_POINTS_IN_BUF = 10000
 
 class StreamPlot():
 	def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False):
@@ -85,7 +85,6 @@ class StreamPlot():
 			return (1.0,1.0,1.0,1.0)
 	
 	def anim(self,fig,params):
-	
 		# remove values in the buffer and put them into an NumPy array suitable for consumption by Galry
 		self.vals_to_add_lock.acquire()
 		for i in self.vals_to_add:
@@ -226,4 +225,10 @@ class StreamPlot():
 	def isPlotAlive(self):
 		return self.disp_thread.isAlive()
 
+	def resetPlot(self):
+		self.vals_to_add_lock.acquire()
+		self.npts = 0
+		self.vals = [ np.array([]) for i in range(self.n) ]
+		self.vals_to_add = []
+		self.vals_to_add_lock.release()
 
