@@ -180,7 +180,7 @@ class StreamPlot():
 		fileName = self.getNextCsvName()
 		(xstart,ystart,xstop,ystop) = fig.get_processor('navigation').get_viewbox()
 		with open(fileName,'w') as f:
-			for i in range(self.npts):
+			for i in range(1,self.npts):
 				t = self.vals[0][i][0]
 				if t >= xstart and t <= xstop:
 					f.write(str(t))
