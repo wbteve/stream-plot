@@ -21,11 +21,22 @@ from galry import *
 import threading
 import glob
 import re
+import thread
+import sys
+import time
+import os
 
 MAX_POINTS_IN_BUF = 10000
 
+def checkPlotClosedAndExit(plot):
+    while True:
+        time.sleep(0.2)
+        if not plot.isPlotAlive():
+            print "Exiting program because plot window was closed . . ."
+            os._exit(0) # force close this process
+
 class StreamPlot():
-    def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False):
+    def __init__(self,saveFileNameStart = "test",lines = [('l','g','plotName')],nSamples=100,auto_t=10.0,legend = False, exitforce=False):
         self.saveFileNameStart = saveFileNameStart 
         self.nSamples = nSamples
         self.n = len(lines)
@@ -71,6 +82,9 @@ class StreamPlot():
         
         self.disp_thread = threading.Thread(target=show) # display the plot in a new thread so as to make object creation non-blocking
         self.disp_thread.start()
+
+        if exitforce:
+            thread.start_new_thread(checkPlotClosedAndExit, (self, ))
     
     def letterToRGBA(self,s):
         if s == 'r':
