@@ -23,7 +23,7 @@ Dependencies
 
 stream-plot uses Galry 0.1.0.rc1 ( http://rossant.github.io/galry/ ) which is bundled in the form of source code. You don't need to download/install Galry separately.
 
-Note: On Ubuntu, you can install all dependencies with `sudo apt-get install python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-matplotlib`
+Note: On Ubuntu 12.04, you can install all dependencies with `apt-get install python-opengl python-qt4 python-qt4-gl python-numpy python-scipy python-matplotlib`
 
 How to use
 ----------
