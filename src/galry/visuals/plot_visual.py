@@ -1,6 +1,6 @@
 import numpy as np
 from galry import get_color, get_next_color
-from visual import Visual
+from .visual import Visual
 
 __all__ = ['process_coordinates', 'PlotVisual']
 
@@ -114,7 +114,7 @@ class PlotVisual(Visual):
             if nprimitives <= 1:
                 color = get_next_color(autocolor)
             else:
-                color = [get_next_color(i + autocolor) for i in xrange(nprimitives)]
+                color = [get_next_color(i + autocolor) for i in range(nprimitives)]
             
             
         # # handle the case where the color is a string where each character

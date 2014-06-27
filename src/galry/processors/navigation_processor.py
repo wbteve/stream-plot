@@ -1,7 +1,7 @@
 import inspect
 import time
 import numpy as np
-from processor import EventProcessor
+from .processor import EventProcessor
 from galry import Manager, TextVisual, get_color
 
 

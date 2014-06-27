@@ -2,9 +2,9 @@ from galry import NavigationEventProcessor, InteractionManager, \
     PaintManager, \
     GridEventProcessor, scale_matrix, rotation_matrix, translation_matrix, \
     MeshNavigationEventProcessor
-from default_manager import DefaultPaintManager, DefaultInteractionManager, \
+from .default_manager import DefaultPaintManager, DefaultInteractionManager, \
     DefaultBindings
-from plot_manager import PlotBindings
+from .plot_manager import PlotBindings
 import numpy as np
 
 

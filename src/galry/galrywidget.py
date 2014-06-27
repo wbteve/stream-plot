@@ -5,11 +5,11 @@ import time
 import timeit
 import numpy as np
 import numpy.random as rdn
-from qtools.qtpy import QtCore, QtGui
-from qtools.qtpy.QtCore import Qt, pyqtSignal
+from .qtools.qtpy import QtCore, QtGui
+from .qtools.qtpy.QtCore import Qt, pyqtSignal
 from galry import DEBUG, log_debug, log_info, log_warn
 try:
-    from qtools.qtpy.QtOpenGL import QGLWidget, QGLFormat
+    from .qtools.qtpy.QtOpenGL import QGLWidget, QGLFormat
 except Exception as e:
     log_warn((("The Qt-OpenGL bindings are not available. "
     "On Ubuntu, please install python-qt4-gl (PyQt4) or "
@@ -169,7 +169,7 @@ class GalryWidget(QGLWidget):
         # if type(bindings) is not list and type(bindings) is not tuple:
             # bindings = [bindings]
         # if binding is a class, try instanciating it
-        for i in xrange(len(bindings)):
+        for i in range(len(bindings)):
             if not isinstance(bindings[i], Bindings):
                 bindings[i] = bindings[i]()
         self.bindings = bindings
@@ -192,7 +192,7 @@ class GalryWidget(QGLWidget):
         
         # default companion classes
         self.companion_classes.update([(k,v) for k,v in \
-            DEFAULT_MANAGERS.iteritems() if k not in self.companion_classes])
+            list(DEFAULT_MANAGERS.items()) if k not in self.companion_classes])
         
     def initialize_bindings(self):
         """Initialize the interaction bindings."""
@@ -207,14 +207,14 @@ class GalryWidget(QGLWidget):
             self.set_companion_classes()
         
         # create the managers
-        for key, val in self.companion_classes.iteritems():
+        for key, val in list(self.companion_classes.items()):
             log_debug("Initializing '%s'" % key)
             obj = val(self)
             setattr(self, key, obj)
         
         # link all managers
-        for key, val in self.companion_classes.iteritems():
-            for child_key, child_val in self.companion_classes.iteritems():
+        for key, val in list(self.companion_classes.items()):
+            for child_key, child_val in list(self.companion_classes.items()):
                 # no self-reference
                 if child_key == key:
                     continue
@@ -922,7 +922,7 @@ def create_basic_window(widget=None, size=None, position=(20, 20),
             """Open a file dialog and save the current image in the specified
             PNG file."""
             initial_filename = 'screen'
-            existing = filter(lambda f: f.startswith(initial_filename), os.listdir('.'))
+            existing = [f for f in os.listdir('.') if f.startswith(initial_filename)]
             i = 0
             if existing:
                 for f in existing:

@@ -1,7 +1,7 @@
 import unittest
 from galry import *
 import numpy as np
-from test import GalryTest
+from .test import GalryTest
 
 class PM(PaintManager):
     def initialize(self):

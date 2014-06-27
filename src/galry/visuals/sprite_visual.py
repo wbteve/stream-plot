@@ -1,6 +1,6 @@
 import numpy as np
-from visual import Visual
-from plot_visual import process_coordinates
+from .visual import Visual
+from .plot_visual import process_coordinates
 from galry import get_color, get_next_color
     
 class SpriteVisual(Visual):

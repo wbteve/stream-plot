@@ -1,6 +1,6 @@
 import unittest
 from galry import *
-from test import GalryTest
+from .test import GalryTest
 
 class EmptyTest(GalryTest):
     def test(self):

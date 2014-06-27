@@ -75,7 +75,7 @@ def load_fnt(filename):
         if line.startswith("char "):
             m = re.search(pattern, line)
             if m:
-                values.append(m.group(*xrange(1,6)))
+                values.append(m.group(*list(range(1,6))))
     f.close()
     M0 = np.array(values, dtype=np.int32)
     M = np.zeros((M0[:,0].max() + 1, M0.shape[1]), dtype=np.int32)
@@ -121,6 +121,6 @@ def get_text_map(text, matrix):#, texsize=None):#, font=None, size=None):
         character i in that string.
     
     """
-    chars = map(ord, (text))
+    chars = list(map(ord, (text)))
     return matrix[chars,1:]
     

@@ -1,5 +1,5 @@
-from qtools.qtpy import QtCore, QtGui
-from qtools.qtpy.QtCore import Qt 
+from .qtools.qtpy import QtCore, QtGui
+from .qtools.qtpy.QtCore import Qt 
 from galry import Manager, ordict
 import numpy as np
 
@@ -121,9 +121,9 @@ class Bindings(object):
             to InteractionManager.process_event(event, parameter)
             
         """
-        if isinstance(key, basestring):
+        if isinstance(key, str):
             key = getattr(Qt, 'Key_' + key)
-        if isinstance(key_modifier, basestring):
+        if isinstance(key_modifier, str):
             key_modifier = getattr(Qt, 'Key_' + key_modifier)
         # if param_getter is a value and not a function, we convert it
         # to a constant function
@@ -161,7 +161,7 @@ class Bindings(object):
         }
         
         texts = {}
-        for (action, key_modifier, key), (event, _) in self.binding.iteritems():
+        for (action, key_modifier, key), (event, _) in list(self.binding.items()):
             desc = self.get_description(action, key_modifier, key)
             
             # key string
@@ -189,7 +189,7 @@ class Bindings(object):
             texts[event].append(bstr)
             
         # sort events
-        self.text = "\n".join(["\n".join(sorted(texts[key])) for key in sorted(texts.iterkeys())])
+        self.text = "\n".join(["\n".join(sorted(texts[key])) for key in sorted(texts.keys())])
         
     def get_text(self):
         if not self.text:

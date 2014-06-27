@@ -48,8 +48,8 @@ def get_marker_texture(marker, size=None):
     elif marker == 'x':
         # force even number
         size -= (np.mod(size, 2))
-        texture[range(size), range(size), :] = 1
-        texture[range(size - 1, -1, -1), range(size), :] = 1
+        texture[list(range(size)), list(range(size)), :] = 1
+        texture[list(range(size - 1, -1, -1)), list(range(size)), :] = 1
         
     elif marker == '-':
         texture[size / 2, :, :] = 1
@@ -85,7 +85,7 @@ class PaintManagerCreator(object):
                 def initialize(self):
                     self.figure = figure
                     self.normalization_viewbox = figure.viewbox
-                    for name, (args, kwargs) in visuals.iteritems():
+                    for name, (args, kwargs) in list(visuals.items()):
                         self.add_visual(*args, **kwargs)
                         
                 def resizeGL(self, w, h):
@@ -96,7 +96,7 @@ class PaintManagerCreator(object):
             class MyPaintManager(baseclass):
                 def initialize(self):
                     self.normalization_viewbox = figure.viewbox
-                    for name, (args, kwargs) in visuals.iteritems():
+                    for name, (args, kwargs) in list(visuals.items()):
                         self.add_visual(*args, **kwargs)
         return MyPaintManager
 
@@ -121,10 +121,10 @@ class InteractionManagerCreator(object):
                 # as a first argument (in EventProcessor.process)
                 self.figure = figure
                 # add all handlers
-                for event, method in handlers.iteritems():
+                for event, method in list(handlers.items()):
                     self.register(event, method)
                 # add all event processors
-                for name, (args, kwargs) in processors.iteritems():
+                for name, (args, kwargs) in list(processors.items()):
                     self.add_processor(*args, **kwargs)
                     
         return MyInteractionManager
@@ -177,7 +177,7 @@ class Figure(object):
         self.initialize(*args, **kwargs)
         
     def initialize(self, **kwargs):
-        for name, value in kwargs.iteritems():
+        for name, value in list(kwargs.items()):
             setattr(self, name, value)
     
     
@@ -276,8 +276,8 @@ class Figure(object):
         lenargs = len(args)
         opt = ''
         # we look for the index in args such that args[i] is a string
-        for i in xrange(lenargs):
-            if isinstance(args[i], basestring):
+        for i in range(lenargs):
+            if isinstance(args[i], str):
                 opt = args[i]
                 break
         if opt:
@@ -296,7 +296,7 @@ class Figure(object):
             cls = vs.SpriteVisual
             texsize = kwargs.pop('marker_size', kwargs.pop('ms', None))
             # marker string
-            if isinstance(marker, basestring): 
+            if isinstance(marker, str): 
                 kwargs['texture'] = get_marker_texture(marker, texsize)
             # or custom texture marker
             else:
@@ -448,7 +448,7 @@ class Figure(object):
         """Connect an action to an event or a callback method."""
         # first case: event is a function or a method, and directly bind the
         # action to that function
-        if not isinstance(event, basestring):
+        if not isinstance(event, str):
             callback = event
             # we create a custom event
             event = getattr(callback, '__name__', 'CustomEvent%d' % len(self.bindings))

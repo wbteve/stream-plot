@@ -80,7 +80,7 @@ def _get_shader_type(varinfo):
       * declaration: the string containing the variable declaration.
         
     """
-    if type(varinfo["ndim"]) == int or type(varinfo["ndim"]) == long:
+    if type(varinfo["ndim"]) == int or type(varinfo["ndim"]) == int:
         if varinfo["ndim"] == 1:
             shader_type = varinfo["vartype"]
         elif varinfo["ndim"] >= 2:
@@ -121,7 +121,7 @@ VARINFO_DICT = {
     
     # integers
     int: 'int',
-    long: 'int',
+    int: 'int',
     np.int32: 'int',
     np.int64: 'int',
     np.dtype('int32'): 'int',
@@ -252,7 +252,7 @@ def _get_uniform_function_name(varinfo):
     args = ()
     
     # scalar or vector uniform
-    if type(ndim) == int or type(ndim) == long:
+    if type(ndim) == int or type(ndim) == int:
         # find function name
         funname = "glUniform%d%s%s" % (ndim, \
                                        float_suffix[vartype == "float"], \
@@ -352,7 +352,7 @@ class ShaderCreator(object):
         
     def set_variables(self, **kwargs):
         # record all visual variables in the shader creator
-        for key, value in kwargs.iteritems():
+        for key, value in list(kwargs.items()):
             setattr(self, key, value)
         
         
@@ -604,7 +604,7 @@ class Visual(BaseVisual):
         is specified by its name."""
         # get the variables list
         if visual is None:
-            variables = self.variables.values()
+            variables = list(self.variables.values())
         else:
             variables = self.get_visual(visual)['variables']
         variables = [v for v in variables if v.get('name', '') == name]
@@ -622,7 +622,7 @@ class Visual(BaseVisual):
         # deal with reference variables
         self.references = {}
         # record all reference variables in the references dictionary
-        for name, value in kwargs.iteritems():
+        for name, value in list(kwargs.items()):
             if isinstance(value, RefVar):
                 self.references[name] = value
                 # then, resolve the reference value on the CPU only, so that
@@ -706,7 +706,7 @@ class Visual(BaseVisual):
         fun = kwargs['fun']
         data = kwargs['data']
         kwargs = fun(data)
-        for name, value in kwargs.iteritems():
+        for name, value in list(kwargs.items()):
             self.variables[name]['data'] = value
         
     
@@ -731,7 +731,7 @@ class Visual(BaseVisual):
         if not shader_type:
             return self.variables
         else:
-            return [var for (_, var) in self.variables.iteritems() \
+            return [var for (_, var) in list(self.variables.items()) \
                             if var['shader_type'] == shader_type]
         
         
@@ -838,7 +838,7 @@ class Visual(BaseVisual):
     def get_variables_list(self):
         """Return the list of variables, to be used in the output dictionary
         containing all the visual information."""
-        variables = self.variables.values()
+        variables = list(self.variables.values())
         # handle reference variables
         for variable in variables:
             name = variable['name']

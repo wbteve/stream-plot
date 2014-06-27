@@ -1,5 +1,5 @@
 import numpy as np
-from plot_visual import PlotVisual
+from .plot_visual import PlotVisual
 from galry import get_color
     
 class RectanglesVisual(PlotVisual):

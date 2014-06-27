@@ -32,7 +32,10 @@
 
 import os
 import sys
-import __builtin__
+try:
+    import builtins
+except ImportError:
+    import __builtin__ as builtins
 
 def _select_qt_binding(binding_name=None):
     global QT_BINDING, QT_BINDING_VERSION
@@ -80,7 +83,7 @@ def _select_qt_binding(binding_name=None):
                 break
             else:
                 error_msgs.append('  Binding loader "_load_%s" not found.' % binding_name)
-        except ImportError, e:
+        except ImportError as e:
             error_msgs.append('  ImportError for "%s": %s' % (binding_name, e))
 
     if QT_BINDING is None:
@@ -97,7 +100,7 @@ def _register_binding_module(module_name, module):
 def _named_import(name):
     parts = name.split('.')
     assert(len(parts) >= 2)
-    module = __builtin__.__import__(name)
+    module = builtins.__import__(name)
     for m in parts[1:]:
         module = module.__dict__[m]
     module_name = parts[-1]
@@ -126,7 +129,7 @@ def _load_pyqt(required_modules, optional_modules):
         sip.setapi('QTime', 2)
         sip.setapi('QUrl', 2)
         sip.setapi('QVariant', 2)
-    except ValueError, e:
+    except ValueError as e:
         raise RuntimeError('Could not set API version (%s): did you import PyQt4 directly?' % e)
 
     # register required and optional PyQt4 modules

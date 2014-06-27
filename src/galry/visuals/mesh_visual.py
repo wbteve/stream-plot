@@ -1,5 +1,5 @@
 import numpy as np
-from visual import Visual
+from .visual import Visual
 from galry import get_color
 
 __all__ = ['normalize',

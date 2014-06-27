@@ -1,6 +1,6 @@
-from visual import CompoundVisual, RefVar
-from sprite_visual import SpriteVisual
-from plot_visual import PlotVisual
+from .visual import CompoundVisual, RefVar
+from .sprite_visual import SpriteVisual
+from .plot_visual import PlotVisual
 from galry import get_color
 import numpy as np
 

@@ -1,6 +1,6 @@
 import numpy as np
-from visual import Visual
-from mesh_visual import MeshVisual
+from .visual import Visual
+from .mesh_visual import MeshVisual
 
 from matplotlib.colors import hsv_to_rgb
 
@@ -72,8 +72,8 @@ class SurfaceVisual(MeshVisual):
 
         # tesselation of the grid
         index = []
-        for i in xrange(n-1):
-            for j in xrange(n-1):
+        for i in range(n-1):
+            for j in range(n-1):
                 index.extend([i*n+j, (i+1)*n+j, i*n+j+1,
                               (i+1)*n+j, i*n+j+1, (i+1)*n+j+1])
         index = np.array(index)

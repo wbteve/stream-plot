@@ -1,4 +1,4 @@
-from plot_visual import PlotVisual
+from .plot_visual import PlotVisual
 import numpy as np
 
 __all__ = ['BarVisual']

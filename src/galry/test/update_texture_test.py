@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from pylab import imread
 from galry import *
-from test import GalryTest, get_image_path
+from .test import GalryTest, get_image_path
 
 class PM(PaintManager):
     def initialize(self):

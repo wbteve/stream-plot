@@ -1,5 +1,5 @@
 import numpy as np
-from visual import Visual, RefVar
+from .visual import Visual, RefVar
     
 class TextureVisual(Visual):
     """Visual that displays a colored texture."""

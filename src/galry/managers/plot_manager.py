@@ -1,6 +1,6 @@
 import numpy as np
 from galry.processors import NavigationEventProcessor
-from default_manager import DefaultPaintManager, DefaultInteractionManager, \
+from .default_manager import DefaultPaintManager, DefaultInteractionManager, \
     DefaultBindings
 from galry import GridEventProcessor, RectanglesVisual, GridVisual, Bindings, \
     DataNormalizer

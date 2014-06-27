@@ -88,8 +88,8 @@ class EventProcessor(object):
             # if the method is a method of a class deriving from EventProcessor
             # we pass just parameter
             if (inspect.ismethod(method) and 
-                (EventProcessor in inspect.getmro(method.im_class) or
-                 galry.InteractionManager in inspect.getmro(method.im_class))):
+                (EventProcessor in inspect.getmro(method.__self__.__class__) or
+                 galry.InteractionManager in inspect.getmro(method.__self__.__class__))):
                 method(parameter)
             else:
                 fig = self.interaction_manager.figure

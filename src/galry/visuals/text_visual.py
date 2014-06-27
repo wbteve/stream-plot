@@ -1,8 +1,8 @@
 import numpy as np
 import os
 from galry import log_debug, log_info, log_warn, get_color
-from fontmaps import load_font
-from visual import Visual
+from .fontmaps import load_font
+from .visual import Visual
 
 __all__ = ['TextVisual']
 

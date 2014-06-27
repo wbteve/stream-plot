@@ -139,7 +139,7 @@ class Uniform(object):
         if type(data) == np.int64:
             data = np.int32(data)
         if type(data) == list:
-            data = map(Uniform.convert_data, data)
+            data = list(map(Uniform.convert_data, data))
         if type(data) == tuple:
             data = tuple(map(Uniform.convert_data, data))
         return data
@@ -348,7 +348,7 @@ class FrameBuffer(object):
 
     @staticmethod
     def draw_buffers(n):
-        gl.glDrawBuffers([getattr(gl, 'GL_COLOR_ATTACHMENT%d' % i) for i in xrange(n)])
+        gl.glDrawBuffers([getattr(gl, 'GL_COLOR_ATTACHMENT%d' % i) for i in range(n)])
             
     @staticmethod
     def unbind():
@@ -516,7 +516,7 @@ class Slicer(object):
             nslices = int(np.ceil(size / float(maxsize)))
         else:
             nslices = 0
-        return [(i*maxsize, min(maxsize+1, size-i*maxsize)) for i in xrange(nslices)]
+        return [(i*maxsize, min(maxsize+1, size-i*maxsize)) for i in range(nslices)]
 
     @staticmethod
     def _slice_bounds(bounds, position, slice_size, regular=False):
@@ -887,7 +887,7 @@ class GLVisualRenderer(object):
         FrameBuffer.bind(variable['buffer'])
         
         # variable['texture'] is a list of texture names in the current visual
-        if isinstance(variable['texture'], basestring):
+        if isinstance(variable['texture'], str):
             variable['texture'] = [variable['texture']]
             
         # draw as many buffers as there are textures in that frame buffer
@@ -1008,7 +1008,7 @@ class GLVisualRenderer(object):
             # one value
             if not size:
                 # scalar or vector
-                if type(ndim) == int or type(ndim) == long:
+                if type(ndim) == int or type(ndim) == int:
                     if ndim == 1:
                         Uniform.load_scalar(location, data)
                     else:
@@ -1019,7 +1019,7 @@ class GLVisualRenderer(object):
             # array
             else:
                 # scalar or vector
-                if type(ndim) == int or type(ndim) == long:
+                if type(ndim) == int or type(ndim) == int:
                     Uniform.load_array(location, data)
             
     def load_compound(self, name, data=None):
@@ -1179,7 +1179,7 @@ class GLVisualRenderer(object):
         
         # handle compound variables
         kwargs2 = kwargs.copy()
-        for name, data in kwargs2.iteritems():
+        for name, data in list(kwargs2.items()):
             variable = self.get_variable(name)
             if variable is None:
                 # log_info("variable '%s' unknown" % name)
@@ -1244,7 +1244,7 @@ class GLVisualRenderer(object):
         # if not self.previous_size:
             # self.previous_size = self.slicer.size
         # go through all data changes
-        for name, data in self.data_updating.iteritems():
+        for name, data in list(self.data_updating.items()):
             if data is not None:
                 # log_info("Updating variable '%s'" % name)
                 self.update_variable(name, data)
@@ -1351,7 +1351,7 @@ class GLVisualRenderer(object):
         # or paint without
         elif self.use_slice:
             # draw all sliced buffers
-            for slice in xrange(len(self.slicer.slices)):
+            for slice in range(len(self.slicer.slices)):
                 # get slice bounds
                 slice_bounds = self.slicer.subdata_bounds[slice]
                 # print slice, slice_bounds
@@ -1505,7 +1505,7 @@ class GLRenderer(object):
     def initialize(self):
         """Initialize the renderer."""
         # print the renderer information
-        for key, value in GLVersion.get_renderer_info().iteritems():
+        for key, value in list(GLVersion.get_renderer_info().items()):
             if key is not None and value is not None:
                 log_debug(key + ": " + value)
         # initialize the renderer options using the options set in the Scene
@@ -1518,7 +1518,7 @@ class GLRenderer(object):
             
         # detect FBO
         self.fbos = []
-        for name, vr in self.visual_renderers.iteritems():
+        for name, vr in list(self.visual_renderers.items()):
             fbos = vr.get_variables('framebuffer')
             if fbos:
                 self.fbos.extend([fbo['buffer'] for fbo in fbos])
@@ -1537,7 +1537,7 @@ class GLRenderer(object):
         # non-FBO rendering
         if not self.fbos:
             self.clear()
-            for name, visual_renderer in self.visual_renderers.iteritems():
+            for name, visual_renderer in list(self.visual_renderers.items()):
                 visual_renderer.paint()
         
         
@@ -1553,7 +1553,7 @@ class GLRenderer(object):
                 self.clear()
                 
                 # paint all visual renderers
-                for name, visual_renderer in self.visual_renderers.iteritems():
+                for name, visual_renderer in list(self.visual_renderers.items()):
                     if visual_renderer.framebuffer == ifbo:
                         # print ifbo, visual_renderer
                         visual_renderer.paint()
@@ -1563,7 +1563,7 @@ class GLRenderer(object):
     
             # render screen (non-FBO) visuals
             self.clear()
-            for name, visual_renderer in self.visual_renderers.iteritems():
+            for name, visual_renderer in list(self.visual_renderers.items()):
                 if visual_renderer.framebuffer == 'screen':
                     # print "screen", visual_renderer
                     visual_renderer.paint()
@@ -1600,6 +1600,6 @@ class GLRenderer(object):
     # ---------------
     def cleanup(self):
         """Clean up all allocated OpenGL objects."""
-        for name, renderer in self.visual_renderers.iteritems():
+        for name, renderer in list(self.visual_renderers.items()):
             renderer.cleanup()
         

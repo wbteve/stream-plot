@@ -1,6 +1,6 @@
-from visual import Visual, CompoundVisual
-from text_visual import TextVisual
-from plot_visual import PlotVisual
+from .visual import Visual, CompoundVisual
+from .text_visual import TextVisual
+from .plot_visual import PlotVisual
 import numpy as np
 
 # Axes

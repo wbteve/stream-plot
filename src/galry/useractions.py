@@ -1,4 +1,4 @@
-from qtools.qtpy.QtCore import Qt 
+from .qtools.qtpy.QtCore import Qt 
 
 __all__ = ['UserActionGenerator', 'LEAP']
 

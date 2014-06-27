@@ -1,4 +1,4 @@
-from navigation_processor import NavigationEventProcessor
+from .navigation_processor import NavigationEventProcessor
 from galry import scale_matrix, rotation_matrix, translation_matrix
 import numpy as np
 

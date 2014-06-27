@@ -151,7 +151,7 @@ class ArrayEncoder(json.JSONEncoder):
         
 def is_str(obj):
     tp = type(obj)
-    return tp == str or tp == unicode
+    return tp == str or tp == str
         
 def serialize(scene):
     """Serialize a scene."""

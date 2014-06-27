@@ -21,7 +21,10 @@ from galry import *
 import threading
 import glob
 import re
-import thread
+try:    
+    import thread as _thread
+except ImportError:
+    import _thread # for Py3k
 import sys
 import time
 import os
@@ -32,7 +35,7 @@ def checkPlotClosedAndExit(plot):
     while True:
         time.sleep(0.2)
         if not plot.isPlotAlive():
-            print "Exiting program because plot window was closed . . ."
+            print("Exiting program because plot window was closed . . .")
             os._exit(0) # force close this process
 
 class StreamPlot():
@@ -97,7 +100,7 @@ class StreamPlot():
         self.disp_thread.start()
 
         if exitforce:
-            thread.start_new_thread(checkPlotClosedAndExit, (self, ))
+            _thread.start_new_thread(checkPlotClosedAndExit, (self, ))
     
 
     def letterToRGBA(self,s):
@@ -153,7 +156,7 @@ class StreamPlot():
             yhi = -float('Inf')
             
             
-            for i in reversed(range(self.npts)):
+            for i in reversed(list(range(self.npts))):
                 if(self.vals[0][i][0] < xstart):
                     break
                 ys = []
@@ -223,7 +226,7 @@ class StreamPlot():
                         f.write(',')
                         f.write(str(self.vals[j][i][1]))
                     f.write('\n')
-        print "Saved samples from t = "+str(xstart)+" to t = "+str(xstop)+" in "+fileName
+        print(("Saved samples from t = "+str(xstart)+" to t = "+str(xstop)+" in "+fileName))
     
     def saveNsamples(self,N):
         fileName = self.getNextCsvName()
@@ -241,7 +244,7 @@ class StreamPlot():
                     f.write(',')
                     f.write(str(self.vals[c][i][1]))
                 f.write('\n')
-            print "Saved to "+str(fileName)
+            print(("Saved to "+str(fileName)))
                 
     def getNextCsvName(self):
         fileNo = 0

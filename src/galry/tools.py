@@ -6,7 +6,7 @@ import time
 import timeit
 import collections
 import subprocess
-from qtools.qtpy import QtCore, QtGui
+from .qtools.qtpy import QtCore, QtGui
 from functools import wraps
 from galry import log_debug, log_info, log_warn
 from collections import OrderedDict as ordict
@@ -75,13 +75,13 @@ def run_all_scripts(dir=".", autodestruct=True, condition=None, ignore=[]):
     for file in files:
         if file in ignore:
             continue
-        print "Running %s..." % file
+        print(("Running %s..." % file))
         args = ["python", file]
         if autodestruct:
             args += ["autodestruct"]
         subprocess.call(args)
-        print "Done!"
-        print
+        print("Done!")
+        print()
 
 def enforce_dtype(arr, dtype, msg=""):
     """Force the dtype of a Numpy array."""

@@ -25,8 +25,7 @@ TOLERANCE = 10
 def erase_images():
     log_info("Erasing all non reference images.")
     # erase all non ref png at the beginning
-    l = filter(lambda f: not(f.endswith('REF.png')),# and f != '_REF.png', 
-        os.listdir(get_image_path()))
+    l = [f for f in os.listdir(get_image_path()) if not(f.endswith('REF.png'))]
     [os.remove(get_image_path(f)) for f in l]
 
 def compare_subimages(img1, img2):

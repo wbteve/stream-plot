@@ -70,9 +70,9 @@ def get_color(color):
     """
     if type(color) == int:
         color = get_next_color(color)
-    if isinstance(color, basestring):
+    if isinstance(color, str):
         color = color.lower()
-        for pattern, fun in PATTERNS.iteritems():
+        for pattern, fun in list(PATTERNS.items()):
             r = re.match(pattern, color)
             if r is not None:
                 break
@@ -87,13 +87,13 @@ def get_color(color):
         assert color
         if color and (type(color[0]) != tuple) and (3 <= len(color) <= 4):
             color = tuple(color)
-        return map(get_color, color)
+        return list(map(get_color, color))
     else:
         return color
 
 if __name__ == '__main__':
     
-    print get_color(['r','y.5'])
+    print((get_color(['r','y.5'])))
     
    
 

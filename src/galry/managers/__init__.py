@@ -1,5 +1,5 @@
-from default_manager import *
-from plot_manager import *
-from mesh_manager import *
+from .default_manager import *
+from .plot_manager import *
+from .mesh_manager import *
 
 

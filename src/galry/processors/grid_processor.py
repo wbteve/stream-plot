@@ -1,7 +1,7 @@
 import inspect
 # from collections import OrderedDict as odict
 import numpy as np
-from processor import EventProcessor
+from .processor import EventProcessor
 from galry import DataNormalizer
 
 

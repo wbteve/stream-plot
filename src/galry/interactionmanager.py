@@ -96,13 +96,13 @@ class InteractionManager(Manager):
         """
         # process None events in all processors
         if event is None and self.prev_event is not None:
-            for name, processor in self.get_processors().iteritems():
+            for name, processor in list(self.get_processors().items()):
                 processor.process_none()
             self.cursor = None
         
         # process events in all processors
         if event is not None:
-            for name, processor in self.get_processors().iteritems():
+            for name, processor in list(self.get_processors().items()):
                 if processor.activated and processor.registered(event):
                     # print name, event
                     processor.process(event, parameter)

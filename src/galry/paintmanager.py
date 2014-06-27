@@ -214,7 +214,7 @@ class PaintManager(Manager):
         self.renderer.initialize()
         # update the variables (with set_data in paint_manager.initialize())
         # after initialization
-        for visual, kwargs in self.data_updating.iteritems():
+        for visual, kwargs in list(self.data_updating.items()):
             self.set_data(visual=visual, **kwargs)
  
     def paintGL(self):
