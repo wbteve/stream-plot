@@ -493,8 +493,8 @@ class ShaderCreator(object):
             fs = fs.replace('%FRAG%', """gl_FragData[%d] = out_color;""" % self.fragdata)
         
         # Make sure there are no Windows carriage returns
-        vs = vs.replace(b"\r\n", b"\n")
-        fs = fs.replace(b"\r\n", b"\n")
+        vs = vs.replace("\r\n", "\n")
+        fs = fs.replace("\r\n", "\n")
         
         # OLDGLSL does not know the texture function
         if not OLDGLSL:
