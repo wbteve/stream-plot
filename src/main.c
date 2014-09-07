@@ -32,6 +32,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main(int argc, const char *argv[])
 {
-    printf("TODO: streamplot\n");
+    char x;
+    int n;
+
+    while(1) {
+        n = fread(&x, sizeof(char), 1, stdin);
+        if(n != 1)
+            break;
+        printf("%c",x);
+    }
+    printf("\n");
     return 0;
 }
