@@ -35,8 +35,8 @@ SRCDIR = src
 
 CC = gcc
 
-CFLAGS = -m32 -Wall -Wunused -std=c99 -O2 -I$(INCDIR)
-LFLAGS = -m32 -O2 -static
+CFLAGS = -Wall -Wunused -std=c99 -O2 -I$(INCDIR) -D_REENTRANT
+LFLAGS = -O2 -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic -lrt -ldl -lm -lpthread
 
 SRCS := $(wildcard $(SRCDIR)/*.c)
 INCS := $(wildcard $(INCDIR)/*.h)
@@ -45,9 +45,9 @@ OBJS := $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 all: $(BINDIR)/$(TARGET)
 
 $(BINDIR)/$(TARGET): $(OBJS)
-	$(CC) $(LFLAGS) $(OBJS) -o $@
+	$(CC) $(OBJS) $(LFLAGS) -o $@
 
-$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(INCLUDES)
+$(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(INCLUDES) Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONEY: clean
