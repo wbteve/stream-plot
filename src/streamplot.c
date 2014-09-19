@@ -28,10 +28,6 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>
-
 #include "streamplot.h"
 
-int main(int argc, const char *argv[]) {
-    return 0;
-}
+#include <SDL2/SDL.h>

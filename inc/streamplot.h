@@ -28,10 +28,28 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdio.h>
+#ifndef __STREAMPLOT_H__
+#define __STREAMPLOT_H__
 
-#include "streamplot.h"
+typedef struct SP_Plot {
+    int nChannels;
+} SP_Plot;
 
-int main(int argc, const char *argv[]) {
-    return 0;
-}
+
+/* Call once to initialize StreamPlot
+ * Returns 0 on success. Other return values indicate failure
+ */
+int SP_Init();
+
+/* Create a streamplot.
+ * Returns a SP_Plot structure if successful.
+ * Returns NULL on failure.
+ */
+SP_Plot SP_Plot(int nChannels);
+
+/* Call once before program terminates
+ * This closes all streamplots.
+ */
+void SP_Quit();
+
+#endif
