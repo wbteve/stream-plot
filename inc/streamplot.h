@@ -31,9 +31,9 @@
 #ifndef __STREAMPLOT_H__
 #define __STREAMPLOT_H__
 
-typedef struct SP_Plot {
-    int nChannels;
-} SP_Plot;
+#define STREAMPLOT_API_VERSION 1
+
+typedef struct SP_Plot SP_Plot;
 
 
 /* Call once to initialize StreamPlot
@@ -42,10 +42,26 @@ typedef struct SP_Plot {
 int SP_Init();
 
 /* Create a streamplot.
- * Returns a SP_Plot structure if successful.
- * Returns NULL on failure.
+ * Returns a SP_Plot structure if successful. Returns NULL on failure.
+ * Example usage: SP_Plot* plot1 = SP_CreatePlot(.nChannels=2, .windowTitle="Test Plot");
  */
-SP_Plot SP_Plot(int nChannels);
+typedef struct {
+    int version;
+    int nChannels;
+    const char* lineType;
+    const char* lineStyle;
+    const char* color;
+    const char* xLabel;
+    const char* yLabel;
+    const char* windowTitle;
+} SP_CreatePlot_args;
+#define SP_CreatePlot(...) SP_CreatePlot_base((SP_CreatePlot_args){__VA_ARGS__});
+SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args);
+
+/* Destroys a plot
+ * Call to remove the plot window and destroy associated data structure
+ */
+void SP_DestroyPlot(SP_Plot* plot);
 
 /* Call once before program terminates
  * This closes all streamplots.

@@ -29,5 +29,36 @@
  */
 
 #include "streamplot.h"
-
 #include <SDL2/SDL.h>
+
+typedef struct SP_Plot {
+    int nChannels;
+    int linesOrPoints;
+    char* color;
+    int* lineStyle;
+    int* lineThickness;
+    SDL_Window* win;
+} SP_Plot;
+
+int SP_Init() {
+    return 0;
+}
+
+SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
+    // Set-up default arguements
+    args.windowTitle = args.windowTitle ? args.windowTitle : "stream-plot";
+    args.nChannels = args.nChannels ? args.nChannels : 1; // Minimum 1 channel
+
+    printf("%s\n", args.windowTitle);
+
+    // Return pointer to new plot structure
+    return (SP_Plot *)malloc(sizeof(SP_Plot));
+}
+
+void SP_DestroyPlot(SP_Plot* plot) {
+    free(plot);
+}
+
+void SP_Quit() {
+
+}

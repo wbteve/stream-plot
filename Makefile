@@ -35,8 +35,8 @@ SRCDIR = src
 
 CC = gcc
 
-CFLAGS = -Wall -Wunused -std=c99 -O2 -I$(INCDIR) -D_REENTRANT
-LFLAGS = -O2 -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic -lrt -ldl -lm -lpthread
+CFLAGS = -Wall -Wunused -std=c99 -O2 -I$(INCDIR)
+LFLAGS = -std=c99 -O2 -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic -lrt -ldl -lm -lpthread
 
 SRCS := $(wildcard $(SRCDIR)/*.c)
 INCS := $(wildcard $(INCDIR)/*.h)

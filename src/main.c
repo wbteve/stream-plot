@@ -33,5 +33,11 @@
 #include "streamplot.h"
 
 int main(int argc, const char *argv[]) {
+    SP_Init();
+
+    SP_Plot* plot1 = SP_CreatePlot(.windowTitle="Test Plot");
+    SP_DestroyPlot(plot1);
+
+    SP_Quit();
     return 0;
 }
