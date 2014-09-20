@@ -41,7 +41,7 @@ typedef struct SP_Plot {
 } SP_Plot;
 
 int SP_Init() {
-    return 0;
+    return SDL_Init(SDL_INIT_VIDEO);
 }
 
 SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
@@ -51,14 +51,20 @@ SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
 
     printf("%s\n", args.windowTitle);
 
+    SP_Plot* newPlot = malloc(sizeof(SP_Plot));
+    newPlot->win = SDL_CreateWindow(args.windowTitle, 100, 100, 320, 240,
+            SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE);
+    if(newPlot->win == NULL)
+        return NULL;
     // Return pointer to new plot structure
-    return (SP_Plot *)malloc(sizeof(SP_Plot));
+    return newPlot;
 }
 
 void SP_DestroyPlot(SP_Plot* plot) {
+    SDL_DestroyWindow(plot->win);
     free(plot);
 }
 
 void SP_Quit() {
-
+    SDL_Quit();
 }
