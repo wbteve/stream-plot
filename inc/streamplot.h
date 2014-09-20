@@ -48,12 +48,12 @@ int SP_Init();
 typedef struct {
     int version;
     int nChannels;
-    const char* lineType;
-    const char* lineStyle;
-    const char* color;
+    const char* plotStyle; // 'l' for line, 'p' for point
+    const char* color; // "rgbk" ('k' for black)
     const char* xLabel;
     const char* yLabel;
     const char* windowTitle;
+    long bufferSize;
 } SP_CreatePlot_args;
 #define SP_CreatePlot(...) SP_CreatePlot_base((SP_CreatePlot_args){__VA_ARGS__});
 SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args);

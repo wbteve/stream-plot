@@ -33,10 +33,8 @@
 
 typedef struct SP_Plot {
     int nChannels;
-    int linesOrPoints;
-    char* color;
-    int* lineStyle;
-    int* lineThickness;
+    const char* plotStyle;
+    const char* color;
     SDL_Window* win;
 } SP_Plot;
 
@@ -45,11 +43,11 @@ int SP_Init() {
 }
 
 SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
+    // In a future version, have option for line/point thickness, grid and gridbg, legend string
     // Set-up default arguements
-    args.windowTitle = args.windowTitle ? args.windowTitle : "stream-plot";
+    args.windowTitle = args.windowTitle ? args.windowTitle : "Stream Plot";
     args.nChannels = args.nChannels ? args.nChannels : 1; // Minimum 1 channel
-
-    printf("%s\n", args.windowTitle);
+    args.bufferSize = args.bufferSize ? args.bufferSize : 1024*1024;
 
     SP_Plot* newPlot = malloc(sizeof(SP_Plot));
     newPlot->win = SDL_CreateWindow(args.windowTitle, 100, 100, 320, 240,
