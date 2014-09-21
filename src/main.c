@@ -29,13 +29,12 @@
  */
 
 #include <stdio.h>
-
 #include "streamplot.h"
 
 int main(int argc, const char *argv[]) {
     SP_Init();
-
-
-    SP_WaitAndQuit();
+    SP_CreatePlot();
+    SP_CreatePlot();
+    SP_WaitForAllWindowsAndQuit();
     return 0;
 }
