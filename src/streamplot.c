@@ -44,21 +44,32 @@ typedef struct SP_Plot {
     SDL_Window* win;
 } SP_Plot;
 
-void SP_PostEvent(int code, void* data1, void* data2);
+static void SP_PostEvent(int code, void* data1, void* data2);
+int PltThreadFunc(void *arg);
 
 static SDL_Thread* pltThread;
 static int nWindows;
 
-static int PltThreadFunc(void *arg) {
+int PltThreadFunc(void *arg) {
     int quit = 0, waitAndQuit = 0;
     SDL_Event evt;
+    SP_Plot* plt;
+    SDL_Window* win;
+
     while (!quit) {
         while (SDL_PollEvent(&evt) != 0) {
             switch (evt.type) {
             case SDL_QUIT:
-                nWindows--;
-                if(nWindows == 0 && waitAndQuit == 1)
-                    quit = 1;
+                quit = 1;
+                break;
+            case SDL_WINDOWEVENT:
+                switch (evt.window.event) {
+                case SDL_WINDOWEVENT_CLOSE:
+                    win = SDL_GetWindowFromID(evt.window.windowID);
+                    plt = SDL_GetWindowData(win, "SP_Plot");
+                    SP_DestroyPlot(plt);
+                    break;
+                }
                 break;
             case SDL_USEREVENT:
                 switch (evt.user.code) {
@@ -67,14 +78,23 @@ static int PltThreadFunc(void *arg) {
                     break;
                 case SP_CREATE_WINDOW_EVENT:
                     nWindows++;
-                    SP_Plot* newPlt = evt.user.data2;
-                    newPlt->win = SDL_CreateWindow(newPlt->windowTitle, 100,
-                            100, 320, 240,
+                    plt = evt.user.data2;
+                    plt->win = SDL_CreateWindow(plt->windowTitle,
+                    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 320, 240,
                             SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE);
+                    SDL_SetWindowData(plt->win, "SP_Plot", plt);
+                    break;
+                case SP_DESTROY_WINDOW_EVENT:
+                    nWindows--;
+                    if (nWindows == 0 && waitAndQuit == 1)
+                        quit = 1;
+                    plt = evt.user.data2;
+                    SDL_DestroyWindow(plt->win);
+                    free(plt);
                     break;
                 case SP_QUIT_WHEN_ALL_WINDOWS_CLOSE_EVENT:
                     waitAndQuit = 1;
-                    if(nWindows == 0)
+                    if (nWindows == 0)
                         quit = 1;
                 }
                 break;
@@ -113,21 +133,20 @@ SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
 }
 
 void SP_DestroyPlot(SP_Plot* plot) {
-    SDL_DestroyWindow(plot->win);
-    free(plot);
+    SP_PostEvent(SP_DESTROY_WINDOW_EVENT, NULL, plot);
 }
-void SP_WaitForAllWindowsAndQuit() {
+void SP_WaitForAllWindowsToClose() {
     SP_PostEvent(SP_QUIT_WHEN_ALL_WINDOWS_CLOSE_EVENT, NULL, NULL);
     int status;
     SDL_WaitThread(pltThread, &status);
 }
-void SP_Quit() {
+static void SP_Quit() {
     SP_PostEvent(SP_QUIT_ALL_EVENT, NULL, NULL);
     int status;
     SDL_WaitThread(pltThread, &status);
 }
 
-void SP_PostEvent(int code, void* data1, void* data2) {
+static void SP_PostEvent(int code, void* data1, void* data2) {
     SDL_Event evt;
     SDL_zero(evt);
     evt.type = SDL_USEREVENT;

@@ -33,8 +33,10 @@
 
 int main(int argc, const char *argv[]) {
     SP_Init();
-    SP_CreatePlot();
-    SP_CreatePlot();
-    SP_WaitForAllWindowsAndQuit();
+
+    SP_Plot* plt1 = SP_CreatePlot();
+    SP_Plot* plt2 = SP_CreatePlot();
+
+    SP_WaitForAllWindowsToClose();
     return 0;
 }

@@ -35,12 +35,6 @@
 
 typedef struct SP_Plot SP_Plot;
 
-
-/* Call once to initialize StreamPlot
- * Returns 0 on success. Other return values indicate failure
- */
-int SP_Init();
-
 /* Create a streamplot.
  * Returns a SP_Plot structure if successful. Returns NULL on failure.
  * Example usage: SP_Plot* plot1 = SP_CreatePlot(.nChannels=2, .windowTitle="Test Plot");
@@ -63,14 +57,14 @@ SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args);
  */
 void SP_DestroyPlot(SP_Plot* plot);
 
-/* Call once before program terminates
- * This closes all streamplots.
- */
-void SP_Quit();
-
 /*
  * Block until all windows have been closed
  */
-void SP_WaitForAllWindowsAndQuit();
+void SP_WaitForAllWindowsToClose();
+
+/*
+ * Initialize Stream Plot
+ */
+int SP_Init();
 
 #endif
