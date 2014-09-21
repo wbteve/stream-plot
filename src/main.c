@@ -32,11 +32,11 @@
 #include "streamplot.h"
 
 int main(int argc, const char *argv[]) {
-    SP_Init();
 
-    SP_Plot* plt1 = SP_CreatePlot();
-    SP_Plot* plt2 = SP_CreatePlot();
+    //SP_Plot* plt1 = SP_CreatePlot();
+    //SP_Plot* plt2 = SP_CreatePlot();
 
     SP_WaitForAllWindowsToClose();
+
     return 0;
 }

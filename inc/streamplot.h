@@ -62,9 +62,4 @@ void SP_DestroyPlot(SP_Plot* plot);
  */
 void SP_WaitForAllWindowsToClose();
 
-/*
- * Initialize Stream Plot
- */
-int SP_Init();
-
 #endif

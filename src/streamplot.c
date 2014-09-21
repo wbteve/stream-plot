@@ -45,12 +45,13 @@ typedef struct SP_Plot {
 } SP_Plot;
 
 static void SP_PostEvent(int code, void* data1, void* data2);
-int PltThreadFunc(void *arg);
+static int SP_Init();
+static int PltThreadFunc(void *arg);
 
 static SDL_Thread* pltThread;
-static int nWindows;
+static int nWindows, initDone;
 
-int PltThreadFunc(void *arg) {
+static int PltThreadFunc(void *arg) {
     int quit = 0, waitAndQuit = 0;
     SDL_Event evt;
     SP_Plot* plt;
@@ -102,11 +103,10 @@ int PltThreadFunc(void *arg) {
         }
         SDL_Delay(20);
     }
-    SDL_Quit();
     return 0;
 }
 
-int SP_Init() {
+static int SP_Init() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         return 1;
     }
@@ -120,6 +120,13 @@ int SP_Init() {
 SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
     // In a future version, have option for line/point thickness, grid and gridbg, legend string
     // Set-up default arguements
+    if(!initDone) {
+        if(SP_Init() != 0) {
+            return NULL;
+        }
+        atexit(SDL_Quit);
+        initDone = 1;
+    }
     args.windowTitle = args.windowTitle ? args.windowTitle : "Stream Plot";
     args.nChannels = args.nChannels ? args.nChannels : 1; // Minimum 1 channel
     args.bufferSize = args.bufferSize ? args.bufferSize : 1024 * 1024;
@@ -139,11 +146,7 @@ void SP_WaitForAllWindowsToClose() {
     SP_PostEvent(SP_QUIT_WHEN_ALL_WINDOWS_CLOSE_EVENT, NULL, NULL);
     int status;
     SDL_WaitThread(pltThread, &status);
-}
-static void SP_Quit() {
-    SP_PostEvent(SP_QUIT_ALL_EVENT, NULL, NULL);
-    int status;
-    SDL_WaitThread(pltThread, &status);
+    SP_Init();
 }
 
 static void SP_PostEvent(int code, void* data1, void* data2) {
