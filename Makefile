@@ -35,7 +35,7 @@ SRCDIR = src
 
 CC = gcc
 
-CFLAGS = -Wall -Wunused -std=c99 -O2 -I$(INCDIR)
+CFLAGS = -Wall -Wunused -std=c99 -O2 -fPIC -I$(INCDIR)
 LFLAGS = -O2 -Wl,-Bstatic -lSDL2 -Wl,-Bdynamic -lrt -ldl -lm -lpthread
 
 #LFLAGS = -O2 -Wl,-Bstatic -lSDL2main -lSDL2 -Wl,-Bdynamic -lm -ldinput8 -lmingw32 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid

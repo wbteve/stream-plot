@@ -35,9 +35,7 @@
 int main(int argc, const char *argv[]) {
     SP_Init();
 
-    SP_Plot* plot1 = SP_CreatePlot();
-    SP_DestroyPlot(plot1);
 
-    SP_Quit();
+    SP_WaitAndQuit();
     return 0;
 }

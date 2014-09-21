@@ -31,6 +31,8 @@
 #include "streamplot.h"
 #include <SDL2/SDL.h>
 
+#define SP_QUIT_ALL_EVENT 0
+
 typedef struct SP_Plot {
     int nChannels;
     const char* plotStyle;
@@ -38,8 +40,51 @@ typedef struct SP_Plot {
     SDL_Window* win;
 } SP_Plot;
 
+static SDL_Thread* pltThread;
+
+static int PltThreadFunc(void *arg) {
+    int quit = 0;
+
+    SDL_Window* win = SDL_CreateWindow("test", 100, 100, 320, 240,
+            SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE);
+    SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, 0);
+
+    SDL_Event evt;
+    while (!quit) {
+        while (SDL_PollEvent(&evt) != 0) {
+            switch (evt.type) {
+            case SDL_QUIT:
+                quit = 1;
+                break;
+            case SDL_USEREVENT:
+                switch (evt.user.code) {
+                case SP_QUIT_ALL_EVENT:
+                    quit = 1;
+                    break;
+                }
+                break;
+            default:
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+                SDL_RenderClear(renderer);
+                SDL_RenderPresent(renderer);
+                break;
+            }
+        }
+        SDL_Delay(20);
+    }
+    SDL_Quit();
+    return 0;
+}
+
 int SP_Init() {
-    return SDL_Init(SDL_INIT_VIDEO);
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        return 1;
+    }
+    pltThread = SDL_CreateThread(PltThreadFunc, "PltThread", NULL);
+    if (pltThread == NULL) {
+        return 2;
+    }
+    return 0;
 }
 
 SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
@@ -47,12 +92,12 @@ SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
     // Set-up default arguements
     args.windowTitle = args.windowTitle ? args.windowTitle : "Stream Plot";
     args.nChannels = args.nChannels ? args.nChannels : 1; // Minimum 1 channel
-    args.bufferSize = args.bufferSize ? args.bufferSize : 1024*1024;
+    args.bufferSize = args.bufferSize ? args.bufferSize : 1024 * 1024;
 
     SP_Plot* newPlot = malloc(sizeof(SP_Plot));
     newPlot->win = SDL_CreateWindow(args.windowTitle, 100, 100, 320, 240,
             SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE);
-    if(newPlot->win == NULL)
+    if (newPlot->win == NULL)
         return NULL;
     // Return pointer to new plot structure
     return newPlot;
@@ -62,7 +107,16 @@ void SP_DestroyPlot(SP_Plot* plot) {
     SDL_DestroyWindow(plot->win);
     free(plot);
 }
-
+void SP_WaitAndQuit() {
+    int status;
+    SDL_WaitThread(pltThread, &status);
+}
 void SP_Quit() {
-    SDL_Quit();
+    SDL_Event evt;
+    SDL_zero(evt);
+    evt.type = SDL_USEREVENT;
+    evt.user.code = SP_QUIT_ALL_EVENT;
+    SDL_PushEvent(&evt);
+
+    SP_WaitAndQuit();
 }

@@ -68,4 +68,9 @@ void SP_DestroyPlot(SP_Plot* plot);
  */
 void SP_Quit();
 
+/*
+ * Call to wait for all the windows to be closed before graphics thread termination
+ */
+void SP_WaitAndQuit();
+
 #endif
