@@ -29,14 +29,26 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "streamplot.h"
 
 int main(int argc, const char *argv[]) {
 
-    //SP_Plot* plt1 = SP_CreatePlot();
-    //SP_Plot* plt2 = SP_CreatePlot();
+    if(SP_Init() != 0) {
+        fprintf(stderr, "Error: Failed to initialize stream-plot\n");
+        exit(1);
+    }
+
+    SP_Plot* plt1 = SP_CreatePlot();
+    SP_Plot* plt2 = SP_CreatePlot();
 
     SP_WaitForAllWindowsToClose();
+
+    //SP_DestroyPlot(plt1);
+    //SP_DestroyPlot(plt2);
+
+    SP_Quit();
 
     return 0;
 }
