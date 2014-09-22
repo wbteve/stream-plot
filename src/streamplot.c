@@ -68,11 +68,11 @@ static SP_WaitCondition* SP_Quit_Condition;
 
 static SP_WaitCondition* SP_InitWaitCondition() {
     SP_WaitCondition* w = (SP_WaitCondition *) malloc(sizeof(SP_WaitCondition));
-    if(w == NULL)
+    if (w == NULL)
         return NULL;
     w->condition = SDL_FALSE;
     w->lock = SDL_CreateMutex();
-    if(w->lock == NULL) {
+    if (w->lock == NULL) {
         free(w);
         return NULL;
     }
@@ -173,7 +173,7 @@ int SP_Init() {
         return 1;
     }
     SP_sync = SDL_CreateMutex();
-    if(SP_sync == NULL) {
+    if (SP_sync == NULL) {
         SDL_Quit();
         return 2;
     }

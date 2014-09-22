@@ -71,7 +71,7 @@ void SP_DestroyPlot(SP_Plot* plot);
 
 
 /*
- * Block until all windows have been closed.
+ * Block until all windows have been closed. Note that this will block infinitely if no windows are open.
  */
 void SP_WaitForAllWindowsToClose();
 
@@ -82,5 +82,7 @@ void SP_WaitForAllWindowsToClose();
  * All plot windows will be destroyed.
  */
 void SP_Quit();
+
+
 
 #endif
