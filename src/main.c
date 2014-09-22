@@ -45,10 +45,6 @@ int main(int argc, const char *argv[]) {
 
     SP_WaitForAllWindowsToClose();
 
-    SP_CreatePlot();
-
-    SP_WaitForAllWindowsToClose();
-
     SP_DestroyPlot(plt1);
     SP_DestroyPlot(plt2);
 

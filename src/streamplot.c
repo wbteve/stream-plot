@@ -41,6 +41,7 @@ typedef struct SP_Plot {
     const char* color;
     const char* windowTitle;
     SDL_Window* win;
+    SDL_Renderer* renderer;
 } SP_Plot;
 
 typedef struct {
@@ -109,6 +110,10 @@ static int SP_PltThreadFunc(void *arg) {
     SDL_Event evt;
     SP_Plot* plt;
 
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0) {
+        return 1;
+    }
+
     while (!quit) {
         while (SDL_PollEvent(&evt) != 0) {
             switch (evt.type) {
@@ -137,6 +142,7 @@ static int SP_PltThreadFunc(void *arg) {
                     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 320, 240,
                             SDL_WINDOW_MAXIMIZED | SDL_WINDOW_RESIZABLE);
                     SDL_SetWindowData(plt->win, "SP_Plot", plt);
+                    plt->renderer = SDL_CreateRenderer(plt->win, -1, 0);
                     break;
                 case SP_DESTROY_WINDOW_EVENT:
                     plt = evt.user.data2;
@@ -169,9 +175,6 @@ static void SP_PostEvent(int code, void* data1, void* data2) {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 int SP_Init() {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0) {
-        return 1;
-    }
     SP_sync = SDL_CreateMutex();
     if (SP_sync == NULL) {
         SDL_Quit();
