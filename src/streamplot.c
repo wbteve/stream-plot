@@ -43,22 +43,68 @@ typedef struct SP_Plot {
     SDL_Window* win;
 } SP_Plot;
 
+typedef struct {
+    SDL_mutex* lock;
+    SDL_cond* cond;
+    SDL_bool condition;
+} SP_WaitCondition;
+
 static void SP_PostEvent(int code, void* data1, void* data2);
-static int PltThreadFunc(void *arg);
+static int SP_PltThreadFunc(void *arg);
+
+static SP_WaitCondition* SP_InitWaitCondition();
+static void SP_WaitForCondition(SP_WaitCondition* w);
+static void SP_SignalCondition(SP_WaitCondition* w);
 
 static SDL_Thread* pltThread;
 static int initDone;
 static SDL_mutex* SP_sync;
 
-static SDL_mutex* SP_quit_lock;
-static SDL_cond* SP_quit_cond;
-static SDL_bool SP_quit_condition = SDL_FALSE;
+static SP_WaitCondition* SP_Quit_Condition;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// Private functions ////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-static int PltThreadFunc(void *arg) {
+static SP_WaitCondition* SP_InitWaitCondition() {
+    SP_WaitCondition* w = (SP_WaitCondition *) malloc(sizeof(SP_WaitCondition));
+    if(w == NULL)
+        return NULL;
+    w->condition = SDL_FALSE;
+    w->lock = SDL_CreateMutex();
+    if(w->lock == NULL) {
+        free(w);
+        return NULL;
+    }
+    w->cond = SDL_CreateCond();
+    if (w->cond == NULL) {
+        SDL_DestroyCond(w->cond);
+        free(w);
+        return NULL;
+    }
+    return w;
+}
+static void SP_DestroyWaitCondition(SP_WaitCondition* w) {
+    SDL_DestroyMutex(w->lock);
+    SDL_DestroyCond(w->cond);
+    free(w);
+}
+static void SP_WaitForCondition(SP_WaitCondition* w) {
+    SDL_LockMutex(w->lock);
+    while (!w->condition) {
+        SDL_CondWait(w->cond, w->lock);
+    }
+    w->condition = SDL_FALSE;
+    SDL_UnlockMutex(w->lock);
+}
+static void SP_SignalCondition(SP_WaitCondition* w) {
+    SDL_LockMutex(w->lock);
+    w->condition = SDL_TRUE;
+    SDL_CondBroadcast(w->cond);
+    SDL_UnlockMutex(w->lock);
+}
+
+static int SP_PltThreadFunc(void *arg) {
     int quit = 0;
     SDL_Event evt;
     SP_Plot* plt;
@@ -67,10 +113,7 @@ static int PltThreadFunc(void *arg) {
         while (SDL_PollEvent(&evt) != 0) {
             switch (evt.type) {
             case SDL_QUIT:
-                SDL_LockMutex(SP_quit_lock);
-                SP_quit_condition = SDL_TRUE;
-                SDL_CondBroadcast(SP_quit_cond);
-                SDL_UnlockMutex(SP_quit_lock);
+                SP_SignalCondition(SP_Quit_Condition);
                 break;
             case SDL_WINDOWEVENT:
                 switch (evt.window.event) {
@@ -129,17 +172,21 @@ int SP_Init() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0) {
         return 1;
     }
-    pltThread = SDL_CreateThread(PltThreadFunc, "PltThread", NULL);
-    if (pltThread == NULL) {
+    SP_sync = SDL_CreateMutex();
+    if(SP_sync == NULL) {
         SDL_Quit();
         return 2;
     }
-    SP_sync = SDL_CreateMutex();
-    SP_quit_lock = SDL_CreateMutex();
-    SP_quit_cond = SDL_CreateCond();
-    if (SP_sync == NULL || SP_quit_lock == NULL || SP_quit_cond == NULL) {
+    SP_Quit_Condition = SP_InitWaitCondition();
+    if (SP_Quit_Condition == NULL) {
+        SDL_DestroyMutex(SP_sync);
         SDL_Quit();
         return 3;
+    }
+    pltThread = SDL_CreateThread(SP_PltThreadFunc, "PltThread", NULL);
+    if (pltThread == NULL) {
+        SDL_Quit();
+        return 2;
     }
     initDone = 1;
     return 0;
@@ -153,6 +200,7 @@ void SP_Quit() {
     SP_PostEvent(SP_QUIT_ALL_EVENT, NULL, NULL);
     SDL_WaitThread(pltThread, &status);
     SDL_DestroyMutex(SP_sync);
+    SP_DestroyWaitCondition(SP_Quit_Condition);
     SDL_Quit();
 }
 
@@ -164,7 +212,7 @@ SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args) {
         SDL_Log("Error acquiring sync lock.\n");
         return NULL;
     }
-    // Set-up default arguements
+// Set-up default arguements
     args.windowTitle = args.windowTitle ? args.windowTitle : "Stream Plot";
     args.nChannels = args.nChannels ? args.nChannels : 1; // Minimum 1 channel
     args.bufferSize = args.bufferSize ? args.bufferSize : 1024 * 1024;
@@ -193,12 +241,6 @@ void SP_WaitForAllWindowsToClose() {
     if (!initDone) {
         return;
     }
-    SDL_LockMutex(SP_quit_lock);
-    while (!SP_quit_condition) {
-        SDL_CondWait(SP_quit_cond, SP_quit_lock);
-    }
-    SP_quit_condition = SDL_FALSE;
-    SDL_UnlockMutex(SP_quit_lock);
-
+    SP_WaitForCondition(SP_Quit_Condition);
 }
 
