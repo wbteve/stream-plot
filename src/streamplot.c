@@ -69,7 +69,7 @@ static int PltThreadFunc(void *arg) {
             case SDL_QUIT:
                 SDL_LockMutex(SP_quit_lock);
                 SP_quit_condition = SDL_TRUE;
-                SDL_CondSignal(SP_quit_cond);
+                SDL_CondBroadcast(SP_quit_cond);
                 SDL_UnlockMutex(SP_quit_lock);
                 break;
             case SDL_WINDOWEVENT:
@@ -197,6 +197,7 @@ void SP_WaitForAllWindowsToClose() {
     while (!SP_quit_condition) {
         SDL_CondWait(SP_quit_cond, SP_quit_lock);
     }
+    SP_quit_condition = SDL_FALSE;
     SDL_UnlockMutex(SP_quit_lock);
 
 }

@@ -41,6 +41,8 @@ typedef struct SP_Plot SP_Plot;
  */
 int SP_Init();
 
+
+
 /* Create a streamplot.
  * Returns a SP_Plot structure if successful. Returns NULL on failure.
  * Example usage: SP_Plot* plot1 = SP_CreatePlot(.nChannels=2, .windowTitle="Test Plot");
@@ -58,15 +60,21 @@ typedef struct {
 #define SP_CreatePlot(...) SP_CreatePlot_base((SP_CreatePlot_args){__VA_ARGS__});
 SP_Plot* SP_CreatePlot_base(SP_CreatePlot_args args);
 
+
+
+
 /* Destroys a plot
  * Call to remove the plot window and destroy associated data structure
  */
 void SP_DestroyPlot(SP_Plot* plot);
 
+
+
 /*
  * Block until all windows have been closed.
  */
 void SP_WaitForAllWindowsToClose();
+
 
 
 /*
