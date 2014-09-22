@@ -45,8 +45,8 @@ int main(int argc, const char *argv[]) {
 
     SP_WaitForAllWindowsToClose();
 
-    //SP_DestroyPlot(plt1);
-    //SP_DestroyPlot(plt2);
+    SP_DestroyPlot(plt1);
+    SP_DestroyPlot(plt2);
 
     SP_Quit();
 
