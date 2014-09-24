@@ -11,6 +11,16 @@ var streamplot = (function() {
     var Plot = function(canvasId) {
         var canvas = document.getElementById(canvasId);
         var ctx = canvas.getContext("2d");
+
+        var w = 100;
+        var h = 100;
+
+        var m_canvas = document.createElement('canvas');
+        m_canvas.width = w;
+        m_canvas.height = h;
+        var m_context = m_canvas.getContext('2d');
+        var canvasData = m_context.getImageData(0, 0, w, h);
+
         return {
             'draw': function(x0, y0, x1, y1) {
                 /*
@@ -53,6 +63,23 @@ var streamplot = (function() {
                 }
                 ctx.putImageData(canvasData, 0, 0);
                 */
+
+                // Off-screen rendering seems to help a lot
+                for(var x = 0; x < w; x++) {
+                    for(var y = 0; y < h; y++) {
+                        // Index of the pixel in the array
+                        var idx = (x + y * w) * 4;
+
+                        // If you want to update the values of the pixel
+                        canvasData.data[idx + 0] = 0; // Red channel
+                        canvasData.data[idx + 1] = 0; // Green channel
+                        canvasData.data[idx + 2] = 255; // Blue channel
+                        canvasData.data[idx + 3] = 255; // Alpha channel
+                    }
+                }
+                m_context.putImageData(canvasData, 0, 0);
+                ctx.drawImage(m_canvas, x0, y0);
+
             },
                 'clear': function() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
