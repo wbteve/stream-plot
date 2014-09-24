@@ -14,6 +14,12 @@ var streamplot = (function() {
         return {
             'draw': function(x0, y0, x1, y1) {
                 /*
+                   http://stackoverflow.com/questions/4899799/whats-the-best-way-to-set-a-single-pixel-in-an-html5-canvas
+                   http://jsperf.com/setting-canvas-pixel
+                   http://stackoverflow.com/questions/7812514/drawing-a-dot-on-html5-canvas
+                   https://hacks.mozilla.org/2009/06/pushing-pixels-with-canvas/
+                   */
+                /*
                    ctx.beginPath();
                    for(var i=0;i < 1000; i++) {
                    ctx.moveTo(x0, y0);
@@ -29,21 +35,21 @@ var streamplot = (function() {
                    }
                    */
                 /*
-                var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                var w = canvas.width;
-                var h = canvas.height;
-                for (var x = 0; x < 100; x++)  {
-                    for (var y = 0; y < 100; y++)  {
+                   var canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                   var w = canvas.width;
+                   var h = canvas.height;
+                   for (var x = 0; x < 100; x++)  {
+                   for (var y = 0; y < 100; y++)  {
 
-                        // Index of the pixel in the array
-                        var idx = (x + y * w) * 4;
+                // Index of the pixel in the array
+                var idx = (x + y * w) * 4;
 
-                        // If you want to update the values of the pixel
-                        canvasData.data[idx + 0] = 0; // Red channel
-                        canvasData.data[idx + 1] = 0; // Green channel
-                        canvasData.data[idx + 2] = 255; // Blue channel
-                        canvasData.data[idx + 3] = 255; // Alpha channel
-                    }
+                // If you want to update the values of the pixel
+                canvasData.data[idx + 0] = 0; // Red channel
+                canvasData.data[idx + 1] = 0; // Green channel
+                canvasData.data[idx + 2] = 255; // Blue channel
+                canvasData.data[idx + 3] = 255; // Alpha channel
+                }
                 }
                 ctx.putImageData(canvasData, 0, 0);
                 */
