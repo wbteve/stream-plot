@@ -9,10 +9,26 @@
 
 var streamplot = (function() {
     var Plot = function(canvasId, params) {
-        // params->{ 'bufSize': 100, 'styles': [], 'colors': [], nChannels: 2, title:"", xLabel:"", yLabel:"", grid: True, 'autoZoom': True }
+        // params->
+        // { 'bufSize': number, nChannels: num, 
+        // 'styles': [], 'colors': [], 'thickness': []
+        // title:"", xLabel:"", yLabel:"", grid: bool, 
+        // 'zoomMode': hash, 'XInterval': num, 'viewArea': hash }
 
-        var defaultColors = ["#ff0000", "#00ff00", "#0000ff"];
+        var defaultColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'];
         // TODO: default colors, styles
+
+        var nChannels = params['nChannels'] || 1;
+        var bufSize = params['bufSize'] || 10000;
+
+        var title = params['title'] || "";
+        var xLabel = params['xLabel'] | "";
+        var yLabel = params['yLabel'] | "";
+        
+        var grid = params['grid'] | true;
+        var zoomMode = params['zoomMode'] || { 'xZoomMode': "auto", 'yZoomMode': "auto" };
+        var xInterval = params['xInterval'] || 10;
+        var viewArea = params['viewArea'] || { 'xStart': 0, 'xStop': 10, 'yStart': 0, 'yStop': 1024 };
 
         var canvas = document.getElementById(canvasId);
         var ctx = canvas.getContext("2d");
@@ -24,15 +40,10 @@ var streamplot = (function() {
         bufCanvas.height = h;
         var bufCtx = bufCanvas.getContext("2d");
 
-        var t = 1;
-
         return 
         {
             'addData': function(t, vals) {
                 // t is time, and vals is an array of length nChannel
-            },
-            'zoomX': function(trange) {
-                // set the range along x-axis (10 secs or 1 sec or whatever). Applicable only when auto zoom is enabled.
             },
             'clear': function() {
                 // Clears the plot
@@ -42,14 +53,16 @@ var streamplot = (function() {
             //////////////////////////////////////////////////////////////////////////////////////////////
             ///////////////////////////// setter functions ///////////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////////////////
-            'setRollMode': function(en) {
-                // en==true puts plot into rolling mode. Need to enable auto-zoom for it to work.
-            }
-            'setAutoZoom': function(enX, enY) {
-                // en==true enables auto zoom along that axis
-            }
-            'setViewArea': function(xStart, xStop, yStart, yStop) {
-                // set the current view area. These params are ignored when autoZoom is enabled
+            'setZoomMode': function(zoomMode) {
+                // zoomMode = { 'xZoomMode': 'manual' or 'auto' or 'roll' or 'overwrite',
+                //              'yZoomMode': 'manual' or 'auto' }
+            },
+            'setXInterval': function(tDiff) {
+                // Works only when xZoom mode is 'overwrite' or 'roll'.
+            },
+            'setViewArea': function(viewArea) {
+                // set the current view area {'xStart': num, 'xStop': num, 'yStart': num, 'yStop': num }. 
+                // This works when 'manual' zoom is enabled for either axis.
             },
             'setGrid': function(en) {
                 // en==true enables the grid, otherwise the grid is hidden
@@ -68,9 +81,12 @@ var streamplot = (function() {
             //////////////////////////// getter functions ////////////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////////////////
             
-            'getAutoZoom': function() {
-                // returns true or false
+            'getZoomMode': function() {
+                // returns zoomMode
             },
+            'getXInterval': function() {
+                // returns X-interval. Applicable only when xZoomMode is 'roll' or 'overwrite'.
+            }
             'getViewArea' : function() {
                 // returns view area
             },
