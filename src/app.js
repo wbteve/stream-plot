@@ -7,7 +7,11 @@
    See http://creativecommons.org/licenses/by-nc/4.0/ for more details.
    */
 $(document).ready(function() {
-    plot1 = streamplot.Plot("myCanvas");
+    plot1 = streamplot.Plot("myCanvas", 
+            { 
+                'nChannels': 2,
+                'grid': true 
+            });
 
     function render() {
         plot1.clear();

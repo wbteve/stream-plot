@@ -33,7 +33,7 @@ var streamplot = (function() {
         var styles = params['styles'] || Array.apply(null, new Array(nChannels)).map(function(ele) { return 'l'; }); // 'l' or 'p'
         var thickness = params['thickness'] || Array.apply(null, new Array(nChannels)).map(function(ele) { return 1.0; });
         var colors = params['colors'] || Array.apply(null, new Array(nChannels)).map(function(e, ind) { return defaultColors[ind % defaultColors.length]; }); 
-        
+
         // Get context of given canvas
         var canvas = document.getElementById(canvasId);
         var ctx = canvas.getContext("2d");
@@ -83,10 +83,6 @@ var streamplot = (function() {
                 yLabel = params['yLabel'] || "";
 
             },
-            'setColors': function(colorArr) {
-                // colors is an array
-                colors = colorArr;
-            },
 
             //////////////////////////////////////////////////////////////////////////////////////////////
             //////////////////////////// getter functions ////////////////////////////////////////////////
@@ -103,14 +99,6 @@ var streamplot = (function() {
             'getViewArea' : function() {
                 // returns view area
                 return viewArea;
-            },
-            'getBufferSize': function() {
-                // return current buffer size
-                return bufSize;
-            },
-            'getColors': function() {
-                // returns array of colors
-                return colors;
             },
             'getGrid': function() {
                 // returns True if grid is enabled
