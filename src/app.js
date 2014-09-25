@@ -9,18 +9,9 @@
 $(document).ready(function() {
     plot1 = streamplot.Plot("myCanvas");
 
-    var x0 = y0 = 100;
-    var x1 = y1 = 200;
     function render() {
         plot1.clear();
-        plot1.draw(x0, y0, x1, y1);
-
-        x0 += 1;
-        x1 += 1;
-        if(x0 == 500) {
-            x0 = 100;
-            x1 = 200;
-        }
+        plot1.draw();
     }
 
     window.requestAnimFrame = (function(){
