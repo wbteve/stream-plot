@@ -38,6 +38,8 @@ var streamplot = (function() {
         // Arrays for data
         var ts = new Array(bufSize);
         var datas = Array.apply(null, new Array(nChannels)).map(function() { return new Array(bufSize); });
+        var writePtr = 0;
+        var displayPtr = 0;
         
         // Get context of given canvas
         var canvas = document.getElementById(canvasId);
@@ -52,12 +54,22 @@ var streamplot = (function() {
         var bufCtx = bufCanvas.getContext("2d");
 
         // Is a plot update needed?
-        var redraw = false;
+        var update = true; // just draw new points
+        var redraw = true; // retrace through the entire buffer
 
         var render = function() {
-            if(redraw) {
+            if(update) {
                 ctx.clearRect(0, 0, w, h);
-                redraw = false;
+                update = false;
+                while(displayPtr != writePtr) {
+                    bufCtx.lineTo(ts[displayPtr], datas[0][displayPtr]);
+                    displayPtr++;
+                    if(displayPtr == bufSize) {
+                        displayPtr = 0;
+                    }
+                }
+                bufCtx.stroke();
+                ctx.drawImage(bufCanvas, 0, 0);                
             }
         };
 
@@ -75,10 +87,26 @@ var streamplot = (function() {
             render();
         })();
 
+        qq = datas;
         return {
             'addData': function(t, vals) {
                 // t is time, and vals is an array of length nChannel
-                redraw = true;
+                update = true;
+                ts[writePtr] = t;
+                for(var i = 0; i < nChannels; i++) {
+                    datas[i][writePtr] = vals[i];
+                }
+                writePtr++;
+                if(writePtr == bufSize) {
+                    writePtr = 0;
+                }
+                if(displayPtr == writePtr) {
+                    // buffer overflow
+                    displayPtr++;
+                    if(displayPtr == bufSize) {
+                        displayPtr = 0;
+                    }
+                }
             },
             'clear': function() {
                 // Clears the plot

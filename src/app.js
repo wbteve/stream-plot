@@ -21,26 +21,7 @@ $(document).ready(function() {
             });
 
     plot1.addData(0, [1, 3]);
-    plot1.addData(1, [2, 5]);
-
-    /*
-    function render() {
-        plot1.clear();
-    }
-
-    window.requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-        };
-    })();
-
-    (function animloop(){
-        requestAnimFrame(animloop);
-        //render();
-    })();
-    */
+    plot1.addData(100, [200, 500]);
+    plot1.addData(200, [300, 400]);
 
 });
