@@ -5,7 +5,8 @@
 
    This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
    See http://creativecommons.org/licenses/by-nc/4.0/ for more details.
-   */
+   Contact the author if you want to use this work under a different license.
+*/
 
 var streamplot = (function() {
     var defaultColors = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'];
@@ -34,6 +35,10 @@ var streamplot = (function() {
         var thickness = params['thickness'] || Array.apply(null, new Array(nChannels)).map(function(ele) { return 1.0; });
         var colors = params['colors'] || Array.apply(null, new Array(nChannels)).map(function(e, ind) { return defaultColors[ind % defaultColors.length]; }); 
 
+        // Arrays for data
+        var ts = new Array(bufSize);
+        var datas = Array.apply(null, new Array(nChannels)).map(function() { return new Array(bufSize); });
+        
         // Get context of given canvas
         var canvas = document.getElementById(canvasId);
         var ctx = canvas.getContext("2d");
@@ -46,9 +51,34 @@ var streamplot = (function() {
         bufCanvas.height = h;
         var bufCtx = bufCanvas.getContext("2d");
 
+        // Is a plot update needed?
+        var redraw = false;
+
+        var render = function() {
+            if(redraw) {
+                ctx.clearRect(0, 0, w, h);
+                redraw = false;
+            }
+        };
+
+        // shim for V-Synced animation
+        var requestAnimFrame = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function(callback) {
+                window.setTimeout(callback, 1000 / 60);
+            };
+        
+        // call the render function once every 16.66 mS or so
+        (function animloop() {
+            requestAnimFrame(animloop);
+            render();
+        })();
+
         return {
             'addData': function(t, vals) {
                 // t is time, and vals is an array of length nChannel
+                redraw = true;
             },
             'clear': function() {
                 // Clears the plot
@@ -62,26 +92,30 @@ var streamplot = (function() {
                 // zoomMode = { 'xZoomMode': 'manual' or 'auto' or 'roll' or 'overwrite',
                 //              'yZoomMode': 'manual' or 'auto' }
                 zoomMode = zMode;
+                redraw = true;
             },
             'setXInterval': function(tDiff) {
                 // Works only when xZoom mode is 'overwrite' or 'roll'.
                 xInterval = tDiff;
+                redraw = true;
             },
             'setViewArea': function(vArea) {
                 // set the current view area {'xStart': num, 'xStop': num, 'yStart': num, 'yStop': num }. 
                 // This works when 'manual' zoom is enabled for either axis.
                 viewArea = vArea;
+                redraw = true;
             },
             'setGrid': function(en) {
                 // en==true enables the grid, otherwise the grid is hidden
                 grid = en;
+                redraw = true;
             },
             'setLabels': function(params) {
                 // params = {'xLabel': "" , 'yLabel': "", 'title': "" }
                 xLabel = params['xLabel'] || "";
                 title = params['title'] || "";
                 yLabel = params['yLabel'] || "";
-
+                redraw = true;
             },
 
             //////////////////////////////////////////////////////////////////////////////////////////////
