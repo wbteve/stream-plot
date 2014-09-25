@@ -11,7 +11,6 @@ $(document).ready(function() {
 
     function render() {
         plot1.clear();
-        plot1.draw();
     }
 
     window.requestAnimFrame = (function(){
