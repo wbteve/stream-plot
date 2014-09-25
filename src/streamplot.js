@@ -8,10 +8,14 @@
    */
 
 var streamplot = (function() {
-    var Plot = function(canvasId) {
+    var Plot = function(canvasId, params) {
+        // params->{ 'bufSize': 100, 'styles': [], 'colors': [], nChannels: 2, title:"", xLabel:"", yLabel:"", grid: True, 'autoZoom': True }
+
+        var defaultColors = ["#ff0000", "#00ff00", "#0000ff"];
+        // TODO: default colors, styles
+
         var canvas = document.getElementById(canvasId);
         var ctx = canvas.getContext("2d");
-
         var w = canvas.width;
         var h = canvas.height;
 
@@ -22,29 +26,68 @@ var streamplot = (function() {
 
         var t = 1;
 
-        return {
-            'draw': function() {
-                bufCtx.clearRect(0, 0, w, h);
-                bufCtx.beginPath();
-                for(var i=0; i < 100; i++) {
-                    bufCtx.moveTo(50, 50);
-                    bufCtx.lineTo(100, 100);
-                }
-                bufCtx.stroke();
-                ctx.drawImage(bufCanvas, t, 0, w-t, h, 0, 0, w-t, h);
-                ctx.drawImage(bufCanvas, 0, 0, t, h, w-t, 0, t, h);
-
-                t++;
-                if(t >= w)
-                    t = 1;
+        return 
+        {
+            'addData': function(t, vals) {
+                // t is time, and vals is an array of length nChannel
+            },
+            'zoomX': function(trange) {
+                // set the range along x-axis (10 secs or 1 sec or whatever). Applicable only when auto zoom is enabled.
             },
             'clear': function() {
+                // Clears the plot
                 ctx.clearRect(0, 0, w, h);
+            },
+
+            //////////////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////// setter functions ///////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////
+            'setRollMode': function(en) {
+                // en==true puts plot into rolling mode. Need to enable auto-zoom for it to work.
+            }
+            'setAutoZoom': function(enX, enY) {
+                // en==true enables auto zoom along that axis
+            }
+            'setViewArea': function(xStart, xStop, yStart, yStop) {
+                // set the current view area. These params are ignored when autoZoom is enabled
+            },
+            'setGrid': function(en) {
+                // en==true enables the grid, otherwise the grid is hidden
+            },
+            'setLabels': function(params) {
+                // params = {'xLabel': "" , 'yLabel': "", 'title': "" }
+            },
+            'setColors': function(colors) {
+                // colors is an array
+            },
+            'setBufferSize': function(size) {
+                // set the buffer size to size
+            },
+
+            //////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////// getter functions ////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////
+            
+            'getAutoZoom': function() {
+                // returns true or false
+            },
+            'getViewArea' : function() {
+                // returns view area
+            },
+            'getBufferSize': function() {
+                // return current buffer size
+            },
+            'getColors': function() {
+                // returns array of colors
+            },
+            'getGrid': function() {
+                // returns True if grid is enabled
             }
         }
     }
-    return {
-        'Plot': Plot
-    }
+}
+return {
+    'Plot': Plot
+}
 })();
 
